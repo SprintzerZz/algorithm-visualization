@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P5507 重排链表｜交互式可视化</title>
+<style>
+:root{--bg:#0b1220;--panel:#141f33;--line:#34465e;--text:#edf4ff;--sub:#a5b6cc;--cyan:#5eead4;--yellow:#facc15;--blue:#60a5fa;--purple:#c4b5fd}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#203653,var(--bg) 55%);color:var(--text);font:15px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}main{max-width:1100px;margin:auto;padding:26px 18px 60px}h1{font-size:clamp(23px,4vw,32px);margin:0 0 5px}h2{font-size:17px;margin:0 0 12px}p{margin:6px 0 15px;color:var(--sub)}.chip{display:inline-block;border:1px solid #50627c;color:#a7efdf;border-radius:50px;padding:3px 12px;font-size:12px;margin-bottom:9px}.panel{background:rgba(20,31,51,.93);border:1px solid #30435c;border-radius:17px;padding:20px;margin-top:17px;box-shadow:0 12px 24px #0002}.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.controls input{background:#0b1627;border:1px solid #48617d;border-radius:8px;color:white;padding:10px 12px;flex:1;min-width:160px;font-size:15px}.controls button,button{border:0;border-radius:9px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;color:#081525;background:var(--cyan)}button.secondary{background:#31435d;color:#f0f5ff}button:disabled{opacity:.35;cursor:not-allowed}.slider{display:flex;align-items:center;gap:10px;color:var(--sub)}.slider input{width:105px}.tip{font-size:13px;color:#9daec5;margin:10px 0 0}.track{min-height:105px;padding:15px 8px 12px;display:flex;align-items:center;flex-wrap:wrap;gap:9px 2px}.node{min-width:53px;height:59px;border:2px solid #65829f;background:#1e3048;border-radius:11px;display:flex;align-items:center;justify-content:center;position:relative;font-weight:800;font-size:19px;transition:.3s}.node small{position:absolute;top:-25px;font-size:12px;color:var(--sub);font-weight:400;white-space:nowrap}.node.left{border-color:var(--blue);background:#1e3a5a}.node.right{border-color:var(--yellow);background:#5a4822}.node.active{border-color:var(--cyan);box-shadow:0 0 0 4px #5eead420}.arrow{color:#91a8c2;font-size:20px;margin:0 5px}.nil{color:#637e98;font-size:13px}.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}.subpanel{border:1px solid #334761;border-radius:12px;padding:13px;min-width:0}.subpanel h3{font-size:14px;color:#c6d4e9;margin:0}.subpanel .track{min-height:80px}.subpanel .node{min-width:44px;height:49px;font-size:16px}.detail{border-left:4px solid var(--cyan);background:#0d1c2c;padding:14px 16px;border-radius:8px;margin-top:15px;min-height:82px}.detail strong{color:var(--cyan)}.status{color:#a5b6cc;font-size:13px}.code{background:#0a1423;border-radius:11px;overflow:auto;padding:15px;font:13px/1.9 ui-monospace,Consolas,monospace;color:#bbd4f8}.code>div{padding:0 12px;white-space:pre;border-radius:5px}.code>div.hl{background:#1b544e;color:#fff;box-shadow:inset 3px 0 #5eead4}.legend{display:flex;gap:17px;flex-wrap:wrap;font-size:13px;color:var(--sub)}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px}.metrics{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#aebed5}.metrics b{color:#eaf5ff}.success{color:var(--cyan)}@media(max-width:650px){.split{grid-template-columns:1fr}.panel{padding:14px}.node{min-width:44px;height:51px;font-size:17px}.arrow{margin:0 2px}}
+</style>
+</head><body><main>
+<span class="chip">链表 · 双指针 · 原地重排 · O(n) 时间 / O(1) 额外空间</span>
+<h1>P5507 重排链表｜交互式执行演示</h1>
+<p>目标：把 <b>L₀ → L₁ → … → Lₙ</b> 重排成 <b>L₀ → Lₙ → L₁ → Lₙ₋₁ → …</b>。只修改 <code>next</code> 指针，不修改节点值。</p>
+<section class="panel"><h2>① 自定义链表</h2><div class="controls"><input id="values" aria-label="节点值" value="1 2 3 4" placeholder="例如：1 2 3 4 5"><button id="build">生成链表</button><button id="example">使用 1～5 示例</button></div><p class="tip">输入 1～16 个整数（空格或逗号分隔）。相同数字也会作为不同的节点处理。</p></section>
+<section class="panel"><div class="metrics"><h2>② 指针操作动画</h2><span class="status" id="counter">步骤 0 / 0</span></div><div class="controls"><button class="secondary" id="prev">⟵ 上一步</button><button id="next">下一步 ⟶</button><button class="secondary" id="play">▶ 自动播放</button><button class="secondary" id="reset">↺ 重置</button><label class="slider">速度 <input type="range" id="speed" min="250" max="2000" value="1100" step="50"></label></div><div class="detail"><strong id="stage">准备开始</strong><div id="description">点击“下一步”，观察寻找中点、反转后半段、交替合并的全过程。</div></div><h2 style="margin-top:20px">当前链表的 next 关系</h2><div class="track" id="mainTrack"></div><div class="legend"><span><i class="dot" style="background:var(--blue)"></i>前半段</span><span><i class="dot" style="background:var(--yellow)"></i>后半段</span><span><i class="dot" style="background:var(--cyan)"></i>本步操作涉及的节点</span></div></section>
+<section class="panel"><h2>③ 分段视图</h2><div class="split"><div class="subpanel"><h3>前半段（head1）</h3><div id="leftTrack" class="track"></div></div><div class="subpanel"><h3>后半段（head2）</h3><div id="rightTrack" class="track"></div></div></div><p class="tip">分段视图按当前阶段展示节点。反转后半段之后，交替连接两条链。</p></section>
+<section class="panel"><h2>④ 对应的 Java 17 核心代码</h2><div class="code" id="code"></div><p class="tip">本算法中 slow 从 head 出发，fast 从 head.next 出发，保证偶数长度时 slow 停在前半段最后一个节点。</p></section>
+<section class="panel"><h2>⑤ 最终输出</h2><div id="result" style="font-size:19px;font-weight:800">尚未完成</div><p class="tip">动画使用唯一节点 ID 追踪节点，所以可以确认是指针重连，而不是改变节点内部的 val。</p></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const codeLines=[
+'if (head == null || head.next == null) return;',
+'// 1. 快慢指针找到前半段尾节点',
+'ListNode slow = head, fast = head.next;',
+'while (fast != null && fast.next != null) {',
+'    slow = slow.next;',
+'    fast = fast.next.next;',
+'}',
+'ListNode second = slow.next;',
+'slow.next = null; // 断开两段',
+'// 2. 反转后半段',
+'ListNode prev = null;',
+'while (second != null) {',
+'    ListNode next = second.next;',
+'    second.next = prev;',
+'    prev = second;',
+'    second = next;',
+'}',
+'// 3. 交替合并',
+'ListNode first = head, right = prev;',
+'while (right != null) {',
+'    ListNode t1 = first.next;',
+'    ListNode t2 = right.next;',
+'    first.next = right;',
+'    right.next = t1;',
+'    first = t1;',
+'    right = t2;',
+'}'];
+$('code').innerHTML=codeLines.map((s,i)=>`<div data-line="${i+1}">${escapeHtml(s)}</div>`).join('');
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+let nodes=[],steps=[],idx=0,timer=null;
+function add(title,desc,links,group,active,lines,left,right,done=false){steps.push({title,desc,links:[...links],group:[...group],active:[...active],lines,left:[...left],right:[...right],done});}
+function generate(vals){nodes=vals.map((val,id)=>({id,val}));const n=vals.length;let links=Array.from({length:n},(_,i)=>i+1<n?i+1:-1);let group=Array(n).fill('');const ids=Array.from({length:n},(_,i)=>i);steps=[];
+add('初始化','原始链表已生成。节点上方的 #编号 表示其原始位置。',links,group,[],[],ids,[]);
+if(n<=1){add('完成','链表长度不超过 1，无需调整。',links,group,ids,[1],ids,[],true);return;}
+let slow=0,fast=1;add('步骤 1：快慢指针找中点','slow 指向第一个节点，fast 指向第二个节点。',links,group,[slow,fast],[3],ids,[]);
+while(fast!==-1&&links[fast]!==-1){slow=links[slow];fast=links[links[fast]];add('快慢指针前进',`slow 移动 1 步至 #${slow}，fast 移动 2 步至 ${fast===-1?'null':'#'+fast}。`,links,group,[slow,...(fast===-1?[]:[fast])],[4,5,6],ids,[]);}
+let left=ids.slice(0,slow+1),right=ids.slice(slow+1);left.forEach(x=>group[x]='left');right.forEach(x=>group[x]='right');add('找到中点',`slow 停在 #${slow}：前半段有 ${left.length} 个节点，后半段有 ${right.length} 个节点。`,links,group,[slow],[7,8],left,right);
+let second=links[slow];links[slow]=-1;add('断开链表',`执行 slow.next = null，断开 #${slow} 与 #${second}。`,links,group,[slow,second],[8,9],left,right);
+let prev=-1;let rev=[];
+while(second!==-1){let next=links[second];links[second]=prev;rev.unshift(second);add('反转后半段',`保存 next = ${next===-1?'null':'#'+next}；将 #${second}.next 指向 ${prev===-1?'null':'#'+prev}。`,links,group,[second,...(prev===-1?[]:[prev])],[12,13,14,15,16],left,rev);prev=second;second=next;}
+add('后半段反转完成','后半段的 next 指针已全部反向，准备与前半段交替合并。',links,group,rev,[17,18,19],left,rev);
+let first=0,rightHead=prev;let count=0;
+while(rightHead!==-1){let t1=links[first],t2=links[rightHead];links[first]=rightHead;add('交替合并：连接后半段',`让 #${first}.next = #${rightHead}，将后半段头节点接到当前前半段节点后面。`,links,group,[first,rightHead],[20,21,22,23],left,rev);
+links[rightHead]=t1;add('交替合并：接回前半段',`让 #${rightHead}.next = ${t1===-1?'null':'#'+t1}，完成第 ${++count} 轮交替插入。`,links,group,[rightHead,...(t1===-1?[]:[t1])],[24,25,26],left,rev);first=t1;rightHead=t2;}
+add('重排完成！','成功通过修改 next 指针实现 L₀ → Lₙ → L₁ → Lₙ₋₁ → …。',links,group,ids,[],ids,[],true);
+}
+function chain(start,links){let result=[],seen=new Set();while(start!==-1&&!seen.has(start)&&start>=0){result.push(start);seen.add(start);start=links[start];}return result;}
+function renderTrack(el,ids,s,empty='空'){el.innerHTML=ids.length?ids.map((id,i)=>`<div class="node ${s.group[id]} ${s.active.includes(id)?'active':''}"><small>#${id}</small>${escapeHtml(String(nodes[id].val))}</div>${i<ids.length-1?'<span class="arrow">→</span>':'<span class="arrow">→</span><span class="nil">null</span>'}`).join(''):`<span class="nil">${empty}</span>`;}
+function render(){let s=steps[idx];$('counter').textContent=`步骤 ${idx} / ${steps.length-1}`;$('stage').textContent=s.title;$('description').textContent=s.desc;
+// Before split, one chain. After split, inspect two independent chains; during merge, reachable chain from head is shown.
+let main=chain(0,s.links);renderTrack($('mainTrack'),main,s);renderTrack($('leftTrack'),s.left,s);renderTrack($('rightTrack'),s.right,s);$('prev').disabled=idx===0;$('next').disabled=idx===steps.length-1;$('result').innerHTML=s.done?`<span class="success">${main.map(id=>nodes[id].val).join(' ')}</span>`:'<span class="status">执行到最后一步后显示结果</span>';
+document.querySelectorAll('.code>div').forEach(el=>el.classList.toggle('hl',s.lines.includes(Number(el.dataset.line))));if(s.done)stop();}
+function stop(){clearInterval(timer);timer=null;$('play').textContent='▶ 自动播放';}
+function build(){stop();let raw=$('values').value.trim();let vals=raw.split(/[\s,，]+/).filter(Boolean).map(Number);if(!vals.length||vals.length>16||vals.some(x=>!Number.isInteger(x)||x<0||x>1000)) {alert('请输入 1～16 个 0～1000 的整数，空格或逗号分隔。');return;}generate(vals);idx=0;render();}
+$('build').onclick=build;$('example').onclick=()=>{$('values').value='1 2 3 4 5';build();};$('prev').onclick=()=>{stop();idx=Math.max(0,idx-1);render();};$('next').onclick=()=>{stop();idx=Math.min(steps.length-1,idx+1);render();};$('reset').onclick=()=>{stop();idx=0;render();};$('play').onclick=()=>{if(timer){stop();return;}if(idx===steps.length-1)idx=0;render();$('play').textContent='⏸ 暂停';timer=setInterval(()=>{if(idx<steps.length-1){idx++;render();}else stop();},2250-Number($('speed').value));};$('speed').oninput=()=>{if(timer){stop();$('play').click();}};$('values').addEventListener('keydown',e=>{if(e.key==='Enter')build();});build();
+</script>
+</body></html>
