@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>删除排序链表中的重复元素 II · 交互演示</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;color:#192536;background:#f6f8fc}*{box-sizing:border-box}body{margin:0;padding:28px}main{max-width:1050px;margin:auto}.panel{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 4px 20px #25345009}h1{font-size:27px;margin:0 0 8px}h2{font-size:18px;margin:0 0 14px}.muted{color:#627083}.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}input{font-size:16px;min-width:250px;flex:1;padding:11px;border:1px solid #cbd5e1;border-radius:9px}button{border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:600;padding:11px 15px;cursor:pointer}button.secondary{background:#e9eff8;color:#27364e}button:disabled{opacity:.45;cursor:not-allowed}.hint{font-size:13px;margin:10px 0;color:#64748b}.error{color:#b42318}.stage{overflow-x:auto;padding:26px 4px 12px;min-height:185px}.nodes{display:flex;align-items:flex-start;min-width:max-content;padding-top:40px}.item{display:flex;align-items:center;position:relative}.node{width:56px;height:54px;border:2px solid #a2b2ca;border-radius:12px;display:grid;place-items:center;font-size:20px;font-weight:700;background:#f8fafc;position:relative;transition:.25s}.node.dup{background:#fee2e2;border-color:#ef4444;color:#991b1b}.node.keep{background:#dcfce7;border-color:#16a34a;color:#166534}.node.active{box-shadow:0 0 0 4px #fbbf244f}.node.prev{border-color:#2563eb}.pointer{position:absolute;white-space:nowrap;font-size:12px;font-weight:700;left:50%;transform:translateX(-50%);top:-31px;color:#2563eb}.pointer.cur{top:59px;color:#d97706}.arrow{width:27px;text-align:center;color:#94a3b8;font-size:22px}.null{font-size:14px;color:#64748b;padding:17px 0}.status{background:#eff6ff;border:1px solid #bfdbfe;padding:14px;border-radius:10px;min-height:52px}.code{white-space:pre;overflow:auto;background:#101b2d;color:#d5e4ff;padding:20px;border-radius:12px;line-height:1.8;font:14px/1.8 ui-monospace,Consolas,monospace}.code .on{background:#2b4d7e;display:block;margin:0 -8px;padding:0 8px;border-radius:5px}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:13px;color:#536278}.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px}.result{font-size:19px;font-weight:700;color:#166534;word-break:break-word}footer{color:#6b7280;font-size:13px;margin-bottom:32px}
+</style>
+</head>
+<body><main>
+<h1>删除排序链表中的重复元素 II</h1><p class="muted">交互理解：重复值的节点全部删除，而不是重复值只保留一个。</p>
+<section class="panel"><h2>1. 自定义输入</h2><div class="controls"><input id="values" value="1 2 3 3 4 4 5" aria-label="输入已排序的链表节点"/><button id="load">生成链表</button><button class="secondary" id="sample1">样例 1</button><button class="secondary" id="sample2">样例 2</button></div><div class="hint" id="error">输入升序或非递减序列，使用空格或逗号分隔，最多 300 个节点。</div></section>
+<section class="panel"><h2>2. 指针变化演示</h2><div class="controls"><button id="prevStep" class="secondary">← 上一步</button><button id="nextStep">下一步 →</button><button id="play" class="secondary">▶ 自动播放</button><button id="reset" class="secondary">↺ 重置</button><span class="muted" id="progress"></span></div><div class="stage"><div class="nodes" id="nodes"></div></div><div class="legend"><span><i class="sw" style="background:#2563eb"></i>prev：已确认保留位置</span><span><i class="sw" style="background:#f59e0b"></i>cur：当前判断节点</span><span><i class="sw" style="background:#ef4444"></i>即将/已经删除</span><span><i class="sw" style="background:#16a34a"></i>保留</span></div><p class="status" id="status" aria-live="polite"></p></section>
+<section class="panel"><h2>3. 对应的 Java 核心逻辑</h2><div class="code" id="code"></div></section>
+<section class="panel"><h2>最终结果</h2><div class="result" id="result">—</div><p class="hint">时间复杂度 O(n)，辅助空间复杂度 O(1)（算法本身，不包含可视化历史状态）。</p></section>
+<footer>虚拟头节点 dummy 可以统一处理头节点被删除的情况。图中节点展示的是当前链表的实际连接关系。</footer>
+</main><script>
+const $=id=>document.getElementById(id);
+const codeLines=[
+'ListNode dummy = new ListNode(0);',
+'dummy.next = head;',
+'ListNode prev = dummy, cur = head;',
+'while (cur != null) {',
+'    if (cur.next != null && cur.val == cur.next.val) {',
+'        int value = cur.val;',
+'        while (cur != null && cur.val == value) {',
+'            cur = cur.next;',
+'        }',
+'        prev.next = cur;',
+'    } else {',
+'        prev = cur;',
+'        cur = cur.next;',
+'    }',
+'}',
+'return dummy.next;'];
+let history=[],index=0,timer=null;
+function build(nums){
+ let links=nums.map((_,i)=>i+1<nums.length?i+1:null),prev=-1,cur=nums.length?0:null;
+ const states=[];const push=(msg,line,removed=[])=>states.push({links:[...links],prev,cur,msg,line,removed:[...removed]});
+ push('初始化 dummy → head；prev 指向 dummy，cur 指向首节点。',2);
+ while(cur!==null){
+  let next=links[cur];
+  if(next!==null&&nums[cur]===nums[next]){
+   let val=nums[cur],removed=[];
+   push(`发现重复值 ${val}：开始跳过所有值为 ${val} 的节点。`,4);
+   while(cur!==null&&nums[cur]===val){removed.push(cur);cur=links[cur];push(`跳过值为 ${val} 的节点；cur 移动到 ${cur===null?'null':nums[cur]}。`,7,removed)}
+   if(prev===-1){/* dummy.next becomes cur, represented by reachable head below */}
+   else links[prev]=cur;
+   push(`执行 prev.next = cur：整组 ${val} 被删除。`,9,removed);
+  }else{
+   push(`节点 ${nums[cur]} 没有重复，保留它。`,10);
+   prev=cur;cur=links[cur];push(`prev 前移到 ${nums[prev]}；cur 移动到 ${cur===null?'null':nums[cur]}。`,12);
+  }
+ }
+ push('遍历结束，返回 dummy.next。',15);
+ // reconstruct current reachable chain based on original indexes and deleted skipped nodes
+ let head=nums.length?0:null;
+ for(const s of states){if(s.prev===-1&&s.removed.length&&s.line===9)head=s.cur; s.head=head; if(s.prev===-1 && s.line===9)head=s.cur;}
+ // proper head for subsequent states
+ head=nums.length?0:null;
+ states.forEach(s=>{if(s.prev===-1 && s.line===9)head=s.cur;s.head=head});
+ return states;
+}
+let nums=[];
+function parseAndLoad(){stop();let raw=$('values').value.trim();let tokens=raw?raw.split(/[\s,，]+/):[];let values=tokens.map(Number);if(values.length>300||tokens.some(t=>!/^[-+]?\d+$/.test(t))||values.some(x=>!Number.isSafeInteger(x)||x<-100||x>100)||values.some((x,i)=>i>0&&x<values[i-1])){$('error').textContent='输入无效：请使用 -100 到 100 之间的非递减整数，节点数不超过 300。';$('error').classList.add('error');return} $('error').textContent='输入有效。点击“下一步”查看每次判断与指针移动。';$('error').classList.remove('error');nums=values;history=build(nums);index=0;render()}
+function reachable(s){const out=[];const seen=new Set();let p=s.head;while(p!==null&&!seen.has(p)){out.push(p);seen.add(p);p=s.links[p]}return out}
+function render(){const s=history[index];if(!s)return;let chain=reachable(s);let html='<div class="item"><div class="node '+(s.prev===-1?'prev':'')+'" style="font-size:12px">dummy'+(s.prev===-1?'<span class="pointer">prev ↓</span>':'')+'</div><span class="arrow">→</span></div>';
+ chain.forEach((id,i)=>{let cl=s.removed.includes(id)?'dup':(s.prev===id?'prev':'');let repeated=nums.filter(v=>v===nums[id]).length>1;if(repeated&&s.line===4&&s.cur===id)cl+=' active';let ps=(s.prev===id?'<span class="pointer">prev ↓</span>':'')+(s.cur===id?'<span class="pointer cur">cur ↑</span>':'');html+=`<div class="item"><div class="node ${cl}">${nums[id]}${ps}</div><span class="arrow">→</span></div>`});
+ html+='<span class="null">null</span>';
+ if(s.cur!==null&&!chain.includes(s.cur))html+=`<span class="muted" style="margin-left:12px">cur → ${nums[s.cur]}（待重新连接）</span>`;
+ $('nodes').innerHTML=html;$('status').textContent=s.msg;$('progress').textContent=`步骤 ${index+1} / ${history.length}`;
+ $('code').innerHTML=codeLines.map((l,i)=>`<span class="${i===s.line?'on':''}">${String(i+1).padStart(2,' ')}  ${l.replaceAll('&','&amp;').replaceAll('<','&lt;')}</span>`).join('');
+ $('prevStep').disabled=index===0;$('nextStep').disabled=index===history.length-1;
+ const final=history.at(-1);$('result').textContent=index===history.length-1?(reachable(final).map(i=>nums[i]).join(' → ')||'空链表（输出空行）'):'完成所有步骤后在这里显示结果';}
+function stop(){if(timer){clearInterval(timer);timer=null}$('play').textContent='▶ 自动播放'}
+$('nextStep').onclick=()=>{if(index<history.length-1){index++;render()}else stop()};$('prevStep').onclick=()=>{stop();if(index>0){index--;render()}};$('reset').onclick=()=>{stop();index=0;render()};$('play').onclick=()=>{if(timer){stop();return}if(index===history.length-1)index=0;render();$('play').textContent='Ⅱ 暂停';timer=setInterval(()=>{if(index>=history.length-1){stop();return}index++;render()},1000)};$('load').onclick=parseAndLoad;$('sample1').onclick=()=>{$('values').value='1 2 3 3 4 4 5';parseAndLoad()};$('sample2').onclick=()=>{$('values').value='1 1 1 2 3';parseAndLoad()};parseAndLoad();
+</script></body></html>
