@@ -216,6 +216,271 @@
       .section-heading { margin-top: 36px; }
       .card { min-height: 210px; padding: 20px; }
     }
+
+    :root {
+      color-scheme: light;
+      --bg: #f0e7d3;
+      --panel: #fbf6e8;
+      --line: #b6a789;
+      --text: #302f26;
+      --muted: #756c5b;
+      --accent: #9b4436;
+      --blue: #426456;
+      --forest: #355447;
+      --paper-shadow: #4a39201a;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: repeating-linear-gradient(0deg, #826c4010 0 1px, transparent 1px 5px),
+        radial-gradient(ellipse at 82% 0%, #fff8e98c 0, transparent 39rem);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: Georgia, "Noto Serif SC", "Songti SC", "SimSun", serif;
+    }
+
+    h1, h2, h3 { font-family: Georgia, "Noto Serif SC", "Songti SC", "SimSun", serif; }
+    h1 { padding-bottom: 16px; border-bottom: 3px double var(--line); letter-spacing: 0; }
+    .eyebrow, .number { color: var(--accent); }
+    .eyebrow::before { background: var(--accent); }
+    .section-heading { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .section-heading h2 { color: var(--forest); }
+    .search input { border-color: var(--line); border-radius: 4px; background: var(--panel); color: var(--text); }
+    .search input:focus-visible, .card:focus-visible { outline-color: var(--accent); }
+    .search input::placeholder { color: var(--muted); }
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-color: var(--line);
+      border-radius: 4px;
+      background: var(--panel);
+      box-shadow: 4px 4px 0 var(--paper-shadow);
+    }
+    .card::before { position: absolute; inset: 0 0 auto; height: 4px; background: var(--accent); content: ""; }
+    .card:hover, .card:focus-visible {
+      border-color: var(--forest);
+      background: #fffaf0;
+    }
+    .card h3 { color: var(--text); }
+    .card p, .count, .search-hint, .search-status, .empty-state, footer { color: var(--muted); }
+    .arrow { color: var(--forest); }
+    .tag {
+      border-color: #b6a789;
+      border-radius: 2px;
+      background: #eee5d2;
+      color: #4d5545;
+    }
+    .empty-state { border-color: var(--line); border-radius: 4px; background: #fbf6e8a6; }
+    footer { border-color: var(--line); }
+  </style>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f4ee;
+      --surface: #fffefa;
+      --surface-soft: #eef2eb;
+      --line: #dce2d8;
+      --text: #202b25;
+      --muted: #68756c;
+      --green: #245844;
+      --green-dark: #193f32;
+      --coral: #c65e48;
+      --shadow: 0 14px 36px #263b2c12;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 86% 0%, #e0eadf 0, transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif;
+    }
+
+    .page { padding-top: 52px; }
+
+    .page > header {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(26px, 5vw, 48px);
+      border: 1px solid #315f49;
+      border-radius: 22px;
+      background: linear-gradient(125deg, var(--green-dark), #2d654d);
+      box-shadow: var(--shadow);
+    }
+
+    .page > header::after {
+      position: absolute;
+      right: -52px;
+      bottom: -134px;
+      width: 290px;
+      height: 290px;
+      border: 1px solid #ffffff20;
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px #ffffff0a, 0 0 0 58px #ffffff08;
+      content: "";
+      pointer-events: none;
+    }
+
+    .eyebrow { color: #b8d7c2; }
+    .eyebrow::before { background: #e68a68; }
+    .page > header h1 {
+      position: relative;
+      z-index: 1;
+      margin-top: 19px;
+      padding: 0;
+      border: 0;
+      color: #fffdf6;
+      font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+      font-size: clamp(38px, 7vw, 58px);
+      letter-spacing: -.035em;
+    }
+
+    .intro {
+      position: relative;
+      z-index: 1;
+      color: #d3e2d7;
+    }
+
+    .section-heading {
+      align-items: center;
+      margin-top: 38px;
+      padding-bottom: 12px;
+      border-color: var(--line);
+    }
+
+    .section-heading h2 {
+      color: var(--text);
+      font-size: 19px;
+      font-weight: 750;
+    }
+
+    .count {
+      padding: 3px 10px;
+      border: 1px solid #cdd9cd;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--green);
+    }
+
+    .search { margin-bottom: 18px; }
+    .search label { color: var(--text); font-weight: 700; }
+    .search input {
+      border-color: var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 2px 6px #263b2c08;
+    }
+    .search input:focus-visible { outline-color: var(--green); }
+    .search input::placeholder { color: #8a958b; }
+    .search-hint, .search-status, .empty-state, footer { color: var(--muted); }
+
+    .grid { gap: 18px; }
+    .card {
+      position: relative;
+      min-height: 218px;
+      overflow: hidden;
+      border-color: var(--line);
+      border-radius: 15px;
+      background: var(--surface);
+      box-shadow: 0 4px 14px #263b2c08;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .card::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), #8aa58b 72%, #d7a17b);
+      content: "";
+    }
+
+    .card:hover, .card:focus-visible {
+      transform: translateY(-4px);
+      border-color: #9db8a1;
+      background: var(--surface);
+      box-shadow: 0 12px 28px #263b2c16;
+    }
+
+    .card:focus-visible { outline-color: var(--green); }
+    .number { color: var(--green); font-size: 12px; }
+    .arrow { color: var(--coral); }
+    .card h3 { margin-top: 16px; color: var(--text); font-size: 20px; }
+    .card p, .tag { color: var(--muted); }
+    .tags { padding-top: 18px; }
+    .tag {
+      border-color: #dce4da;
+      border-radius: 999px;
+      background: var(--surface-soft);
+    }
+    .empty-state {
+      border-color: var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    footer { border-color: var(--line); }
+
+    :root {
+      --bg: #f3eee4;
+      --surface: #fbf8f1;
+      --surface-soft: #eee8dc;
+      --line: #ded5c7;
+      --text: #292923;
+      --muted: #777267;
+      --green: #65745c;
+      --green-dark: #4a5842;
+      --coral: #c76c4e;
+      --shadow: 0 18px 42px #382a1712;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 86% 0%, #fffaf0 0, transparent 34rem),
+        linear-gradient(135deg, #f7f3eb, var(--bg) 60%, #eee8dc);
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+    }
+
+    .page > header {
+      border: 1px solid #dfcfc0;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 90% 15%, #c76c4e1b 0 3px, transparent 4px) 0 0 / 22px 22px,
+        linear-gradient(120deg, #fbf8f1, #eee6d9);
+      box-shadow: var(--shadow);
+    }
+
+    .page > header::after {
+      right: -85px;
+      bottom: -180px;
+      border-color: #c76c4e35;
+      box-shadow: 0 0 0 28px #c76c4e0a, 0 0 0 58px #65745c0a;
+    }
+
+    .eyebrow { color: var(--terracotta-dark, #a74e37); }
+    .eyebrow::before { background: var(--coral); }
+    .page > header h1 {
+      color: var(--text);
+      font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+    }
+    .intro { color: var(--muted); }
+    .section-heading h2 { color: var(--text); }
+    .count { border-color: #d8cfc0; background: #f7f2e9; color: #5a6950; }
+    .search input { border-color: #d5ccbd; background: #fffdf8; color: var(--text); }
+    .card { border-radius: 13px; background: #fbf8f1; }
+    .card::before { background: linear-gradient(90deg, var(--coral), #d9a270 58%, #879177); }
+    .card:hover, .card:focus-visible { border-color: #c9a58f; background: #fffaf2; }
+    .number { color: #a74e37; }
+    .arrow { color: var(--coral); }
+    .tag { border-color: #ded5c7; background: #f0eadf; color: #666154; }
+
+    @media (max-width: 520px) {
+      .page { padding-top: 28px; }
+      .page > header { border-radius: 17px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
   </style>
 </head>
 <body>

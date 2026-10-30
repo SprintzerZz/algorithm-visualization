@@ -5,6 +5,54 @@
 <title>P5508 奇偶链表｜交互式算法演示</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#e8edf7;background:#101624}*{box-sizing:border-box}body{margin:0;padding:30px 18px}.wrap{max-width:1060px;margin:auto}h1{font-size:26px;margin:0 0 8px}.sub{color:#abb8ce;margin:0 0 22px}.panel{background:#1b2537;border:1px solid #35415a;border-radius:15px;padding:19px;margin:16px 0}.flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}input{background:#111b2b;color:#fff;border:1px solid #4b5a73;border-radius:8px;padding:12px;font-size:15px;flex:1;min-width:210px}button{border:0;border-radius:9px;padding:11px 16px;background:#4f79e8;color:white;cursor:pointer;font-size:14px;font-weight:600}button:hover{filter:brightness(1.12)}button:disabled{opacity:.4;cursor:not-allowed}.secondary{background:#34445c}.purple{background:#825ce0}.small{font-size:13px;color:#b4c1d5}.heading{font-size:17px;font-weight:700;margin-bottom:12px}.badge{display:inline-block;background:#34445c;border-radius:7px;padding:5px 10px;font-size:13px;color:#d9e4fa}.lanes{display:grid;grid-template-columns:1fr;gap:13px}.lane{background:#131d2d;border-radius:11px;padding:16px;min-height:95px}.lane-name{font-weight:700;margin-bottom:12px}.nodes{display:flex;align-items:center;gap:3px;flex-wrap:wrap;min-height:48px}.node{display:inline-flex;flex-direction:column;align-items:center;position:relative;min-width:52px}.bubble{border:2px solid #5e7498;border-radius:9px;min-width:43px;text-align:center;padding:9px 8px;background:#283951;font-weight:700}.odd .bubble{background:#144b46;border-color:#3ecaa8}.even .bubble{background:#273f78;border-color:#76a1ff}.current .bubble{outline:3px solid #f8c34a;outline-offset:2px}.arrow{color:#93a9c9;font-size:24px;margin:0 5px}.tag{font-size:11px;min-height:17px;color:#ffcf68;margin-top:7px}.null{font-size:14px;color:#8997ad}.description{line-height:1.7;color:#e0e8f5;padding:12px 14px;border-left:3px solid #7b9aff;background:#26354e;border-radius:7px;margin:12px 0}.code{white-space:pre-wrap;tab-size:4;background:#101827;border-radius:10px;padding:14px;overflow:auto;font-size:13px;line-height:1.8;color:#cbdaf0}.code .active{display:block;background:#3b5179;color:#fff;border-left:3px solid #ffd16d;margin-left:-8px;padding-left:5px}pre{margin:0} .progress{height:7px;background:#354258;border-radius:20px;overflow:hidden;margin-top:14px}.bar{background:#7b9aff;height:100%;transition:width .25s}.note{color:#9eb0cb;font-size:13px;margin-top:12px}.indicator{display:flex;gap:8px;flex-wrap:wrap}.indicator span{background:#303c54;padding:7px 11px;border-radius:7px;font-size:13px}.indicator strong{color:#ffd26f} @media(min-width:700px){.lanes{grid-template-columns:1fr 1fr}} </style>
+
+<style>
+:root{color-scheme:light;--bg:#f5f4ee;--surface:#fffefa;--soft:#eef2eb;--line:#dce2d8;--text:#202b25;--muted:#68756c;--green:#245844;--green-dark:#193f32;--coral:#c65e48;--shadow:0 10px 28px #263b2c10}
+body{background:radial-gradient(ellipse at 88% 0%,#e0eadf 0,transparent 34rem),var(--bg);color:var(--text);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1060px;padding-top:22px}
+h1,h2,.heading,.lane-name{color:var(--text)}
+h1{font-family:Georgia,"Noto Serif SC","Songti SC",serif;font-size:clamp(26px,4vw,34px);letter-spacing:-.025em}
+p,.sub,.small,.note,.null,.tag{color:var(--muted)}
+.panel,.lane{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
+.lane{background:#f7f8f3;box-shadow:none}
+.badge,.indicator span{border:1px solid var(--line);border-radius:9px;background:var(--soft);color:var(--text)}
+.description{border-left-color:var(--coral);border-radius:9px;background:#f8eee8;color:var(--text)}
+.bubble{border-color:#aab8aa;border-radius:10px;background:#f5f7f2;color:var(--text)}
+.odd .bubble{border-color:#8eaf96;background:#e5f0e5;color:var(--green-dark)}
+.even .bubble{border-color:#d9aa8e;background:#f7e9df;color:#733f30}
+.current .bubble{outline-color:var(--coral)}
+.arrow{color:#89958a}.tag{color:var(--coral)}
+.progress{border-radius:999px;background:#e2e8df}.bar{border-radius:999px;background:var(--green)}
+.code{border:1px solid #304d40;border-radius:12px;background:#19352b;color:#eff4e9}
+.code .active{border-left-color:#e18b68;background:#315c49;color:#fffefa}
+.indicator strong{color:var(--coral)}
+input,select{border-color:var(--line)!important;border-radius:9px!important;background:var(--surface)!important;color:var(--text)!important}
+button,button.purple{border:1px solid var(--green);border-radius:9px;background:var(--green);color:#fffefa}
+button.secondary{border-color:#d5dfd4;background:var(--soft);color:var(--text)}
+button:hover{filter:none;transform:translateY(-1px);box-shadow:0 4px 10px #263b2c16}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+:root{--bg:#f3eee4;--surface:#fbf8f1;--soft:#eee8dc;--line:#ded5c7;--text:#292923;--muted:#777267;--green:#65745c;--green-dark:#4a5842;--coral:#c76c4e;--shadow:0 18px 42px #382a1712}
+body{background:radial-gradient(ellipse at 86% 0%,#fffaf0 0,transparent 34rem),linear-gradient(135deg,#f7f3eb,var(--bg) 60%,#eee8dc);font-family:"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:940px}
+h1{font-family:Georgia,"Noto Serif SC","Songti SC",serif}
+.panel{border-color:var(--line);border-radius:15px;background:#fbf8f1;box-shadow:var(--shadow)}
+.lane{border-color:var(--line);border-radius:11px;background:#f7f3eb}
+.badge,.indicator span{border-color:#ded5c7;background:#f0eadf;color:#4b4a40}
+.description{border-left-color:var(--coral);background:#f8eee4;color:var(--text)}
+.bubble{border-color:#c8c0b3;background:#fffdf8;color:var(--text)}
+.odd .bubble{border-color:#8c9a7f;background:#e8ecdf;color:#4a5842}
+.even .bubble{border-color:#d69a7f;background:#f7e6da;color:#8f4935}
+.current .bubble{outline-color:var(--coral)}
+.arrow{color:#999183}.tag{color:#a74e37}
+.progress{background:#e2dbce}.bar{background:var(--terracotta,#c76c4e)}
+.code{border:1px solid #3e483c;background:#292f29;color:#f2ecdf}
+.code .active{border-left-color:var(--coral);background:#414b3f;color:#fffaf0}
+.indicator strong{color:#a74e37}
+input,select{border-color:#d5ccbd!important;background:#fffdf8!important;color:var(--text)!important}
+button,button.purple{border-color:var(--coral);background:var(--coral);color:#fffaf3}
+button.secondary{border-color:#d8d0c3;background:#f1ede4;color:#4b4a40}
+button:hover{background:#a74e37}
+</style>
 </head>
 <body><main class="wrap">
 <h1>🔗 P5508 奇偶链表 · 交互式演示</h1><p class="sub">按节点位置（从 1 开始）分组，而不是按节点值的奇偶性。追踪 Java 双指针的每一次修改。</p>

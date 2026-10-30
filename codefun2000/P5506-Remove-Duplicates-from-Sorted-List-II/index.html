@@ -6,6 +6,57 @@
 <style>
 :root{font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;color:#192536;background:#f6f8fc}*{box-sizing:border-box}body{margin:0;padding:28px}main{max-width:1050px;margin:auto}.panel{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:22px;margin:16px 0;box-shadow:0 4px 20px #25345009}h1{font-size:27px;margin:0 0 8px}h2{font-size:18px;margin:0 0 14px}.muted{color:#627083}.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}input{font-size:16px;min-width:250px;flex:1;padding:11px;border:1px solid #cbd5e1;border-radius:9px}button{border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:600;padding:11px 15px;cursor:pointer}button.secondary{background:#e9eff8;color:#27364e}button:disabled{opacity:.45;cursor:not-allowed}.hint{font-size:13px;margin:10px 0;color:#64748b}.error{color:#b42318}.stage{overflow-x:auto;padding:26px 4px 12px;min-height:185px}.nodes{display:flex;align-items:flex-start;min-width:max-content;padding-top:40px}.item{display:flex;align-items:center;position:relative}.node{width:56px;height:54px;border:2px solid #a2b2ca;border-radius:12px;display:grid;place-items:center;font-size:20px;font-weight:700;background:#f8fafc;position:relative;transition:.25s}.node.dup{background:#fee2e2;border-color:#ef4444;color:#991b1b}.node.keep{background:#dcfce7;border-color:#16a34a;color:#166534}.node.active{box-shadow:0 0 0 4px #fbbf244f}.node.prev{border-color:#2563eb}.pointer{position:absolute;white-space:nowrap;font-size:12px;font-weight:700;left:50%;transform:translateX(-50%);top:-31px;color:#2563eb}.pointer.cur{top:59px;color:#d97706}.arrow{width:27px;text-align:center;color:#94a3b8;font-size:22px}.null{font-size:14px;color:#64748b;padding:17px 0}.status{background:#eff6ff;border:1px solid #bfdbfe;padding:14px;border-radius:10px;min-height:52px}.code{white-space:normal;overflow:auto;background:#101b2d;color:#d5e4ff;padding:20px;border-radius:12px;line-height:1.8;font:14px/1.8 ui-monospace,Consolas,monospace}.code .code-line{display:grid;grid-template-columns:3ch max-content;column-gap:1ch;white-space:pre}.code .line-number{color:#8495ad;text-align:right;user-select:none}.code .source{white-space:pre}.code .on{background:#2b4d7e;box-shadow:inset 3px 0 #8db9ff;border-radius:5px}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:13px;color:#536278}.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px}.result{font-size:19px;font-weight:700;color:#166534;word-break:break-word}footer{color:#6b7280;font-size:13px;margin-bottom:32px}
 </style>
+
+<style>
+:root{color-scheme:light;--bg:#f5f4ee;--surface:#fffefa;--soft:#eef2eb;--line:#dce2d8;--text:#202b25;--muted:#68756c;--green:#245844;--green-dark:#193f32;--coral:#c65e48;--shadow:0 10px 28px #263b2c10}
+body{background:radial-gradient(ellipse at 88% 0%,#e0eadf 0,transparent 34rem),var(--bg);color:var(--text);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif}
+main{max-width:1060px;padding-top:20px}
+h1,h2{color:var(--text)}
+h1{font-family:Georgia,"Noto Serif SC","Songti SC",serif;font-size:clamp(26px,4vw,34px);letter-spacing:-.025em}
+p,.muted,.hint,.legend,footer{color:var(--muted)}
+.panel{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
+.status{border:1px solid #d6e3d8;border-left:4px solid var(--green);border-radius:9px;background:#edf4ed;color:var(--text)}
+.stage{border:1px solid var(--line);border-radius:11px;background:#f8f9f5}
+.node{border-color:#aab8aa;border-radius:10px;background:var(--surface);color:var(--text)}
+.node.dup{border-color:#d58b78;background:#f8e9e3;color:#8f392d}
+.node.keep{border-color:#8eaf96;background:#e5f0e5;color:var(--green-dark)}
+.node.active{box-shadow:0 0 0 4px #c65e4826}
+.node.prev{border-color:var(--green)}
+.pointer{color:var(--green)}.pointer.cur{color:var(--coral)}
+.arrow,.null{color:#89958a}
+.code{border:1px solid #304d40;border-radius:12px;background:#19352b;color:#eff4e9}
+.code .line-number{color:#a8b8a8}
+.code .on{background:#315c49;box-shadow:inset 3px 0 #e18b68;color:#fffefa}
+input{border-color:var(--line);border-radius:9px;background:var(--surface);color:var(--text)}
+button{border:1px solid var(--green);border-radius:9px;background:var(--green);color:#fffefa}
+button.secondary{border-color:#d5dfd4;background:var(--soft);color:var(--text)}
+button:hover:not(:disabled){filter:none;transform:translateY(-1px);box-shadow:0 4px 10px #263b2c16}
+button:focus-visible,input:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+.error{color:#a74435}
+:root{--bg:#f3eee4;--surface:#fbf8f1;--soft:#eee8dc;--line:#ded5c7;--text:#292923;--muted:#777267;--green:#65745c;--green-dark:#4a5842;--coral:#c76c4e;--shadow:0 18px 42px #382a1712}
+body{background:radial-gradient(ellipse at 86% 0%,#fffaf0 0,transparent 34rem),linear-gradient(135deg,#f7f3eb,var(--bg) 60%,#eee8dc);font-family:"Segoe UI","Microsoft YaHei",sans-serif}
+main{max-width:940px}
+h1{font-family:Georgia,"Noto Serif SC","Songti SC",serif}
+.panel{border-color:var(--line);border-radius:15px;background:#fbf8f1;box-shadow:var(--shadow)}
+input{border-color:#d5ccbd;background:#fffdf8}
+button{border-color:var(--coral);background:var(--coral)}
+button.secondary{border-color:#d8d0c3;background:#f1ede4;color:#4b4a40}
+button:hover:not(:disabled){background:#a74e37}
+.status{border-color:#e3c9b9;border-left-color:var(--coral);background:#f8eee4}
+.stage{border-color:var(--line);background:#f7f3eb}
+.node{border-color:#c8c0b3;background:#fffdf8}
+.node.dup{border-color:#c76c4e;background:#f7e6da;color:#8f4935}
+.node.keep{border-color:#8c9a7f;background:#e8ecdf;color:#4a5842}
+.node.active{box-shadow:0 0 0 4px #c76c4e26}
+.node.prev{border-color:#65745c}
+.pointer{color:#65745c}.pointer.cur{color:#a74e37}
+.arrow,.null{color:#999183}
+.code{border-color:#3e483c;background:#292f29;color:#f2ecdf}
+.code .line-number{color:#b4ad9e}
+.code .on{background:#414b3f;box-shadow:inset 3px 0 var(--coral);color:#fffaf0}
+input:focus-visible{outline-color:var(--coral)}
+.error{color:#a74e37}
+</style>
 </head>
 <body><main>
 <h1>删除排序链表中的重复元素 II</h1><p class="muted">交互理解：重复值的节点全部删除，而不是重复值只保留一个。</p>

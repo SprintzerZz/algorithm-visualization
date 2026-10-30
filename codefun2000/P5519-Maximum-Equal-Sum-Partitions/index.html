@@ -2,6 +2,44 @@
 <html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>P5519 等和连续段最多划分 · 交互演示</title>
 <style>
 :root{color-scheme:light;--ink:#16233a;--muted:#66758c;--line:#e3eaf4;--blue:#2563eb;--soft:#f3f7fd;--green:#15803d}*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:var(--ink);font:15px/1.6 system-ui,-apple-system,'Segoe UI','Microsoft YaHei',sans-serif}.wrap{max-width:1050px;margin:25px auto;padding:0 15px}.shell{background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 12px 42px #2540630a}h1{margin:0;font-size:23px}p{margin:6px 0 18px;color:var(--muted)}.line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.input{flex:1;min-width:180px;padding:11px;border:1px solid #cbd6e6;border-radius:9px;font-size:15px}button{border:1px solid #ccd8eb;border-radius:9px;background:white;padding:10px 14px;color:var(--ink);cursor:pointer;font-weight:600}button.primary{background:var(--blue);border-color:var(--blue);color:white}button:disabled{opacity:.4;cursor:not-allowed}button:hover:not(:disabled){filter:brightness(.97)}.section{margin-top:20px}.heading{font-weight:700;margin-bottom:9px}.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{display:flex;min-width:52px;flex-direction:column;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:7px 9px;transition:all .15s}.chip small{font-size:10px;color:var(--muted)}.chip.active{background:#dbeafe;border-color:var(--blue)}.chip.cut{background:#dcfce7;border-color:#4ade80}.chip.active.cut{outline:2px solid var(--blue)}.badge{padding:3px 10px;border:1px solid var(--line);border-radius:20px;background:var(--soft);font-size:12px}.badge.current{border-color:var(--blue);background:#dbeafe;color:#1d4ed8}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}.stat{background:var(--soft);padding:11px;border-radius:10px;text-align:center}.stat small{display:block;color:var(--muted)}.stat b{font-size:20px;font-variant-numeric:tabular-nums}.panel{background:#f8fbff;border:1px solid var(--line);padding:15px;border-radius:12px;min-height:110px}.descr{font-weight:600}.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}.controls input{flex:1;min-width:120px;accent-color:var(--blue)}.code{background:#101b30;color:#dce7ff;padding:15px;border-radius:12px;overflow-x:auto;font:12px/1.75 Consolas,Monaco,monospace}.code-line{display:block;white-space:pre}.code-line.on{background:#294d88;outline:3px solid #294d88;border-radius:2px}.explain{color:var(--muted);font-size:12px}.error{color:#b91c1c}.done{color:var(--green)}@media(max-width:600px){.shell{padding:15px}.stats{grid-template-columns:repeat(2,1fr)}h1{font-size:19px}.chip{min-width:45px;padding:6px}.wrap{margin:8px auto}}
+</style><style>
+:root{color-scheme:light;--bg:#f5f4ee;--surface:#fffefa;--soft:#eef2eb;--line:#dce2d8;--text:#202b25;--muted:#68756c;--green:#245844;--green-dark:#193f32;--coral:#c65e48;--shadow:0 10px 28px #263b2c10}
+body{background:radial-gradient(ellipse at 88% 0%,#e0eadf 0,transparent 34rem),var(--bg);color:var(--text);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1080px;padding-top:18px}
+h1,h2,.heading{color:var(--text)}
+h1{font-family:Georgia,"Noto Serif SC","Songti SC",serif;font-size:clamp(25px,4vw,32px);letter-spacing:-.025em}
+p,.explain{color:var(--muted)}
+.shell,.panel{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
+.chip,.stat,.badge{border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--text)}
+.chip.active,.badge.current{border-color:#96b69d;background:#e5f0e5;color:var(--green-dark)}
+.chip.cut{border-color:#96b69d;background:#e5f0e5}
+.chip.active.cut{outline-color:var(--coral)}
+.panel{min-height:110px;background:#fbfcf8}
+.code{border:1px solid #304d40;border-radius:12px;background:#19352b;color:#eff4e9}
+.code-line.on{border-radius:5px;background:#315c49;outline-color:#315c49;box-shadow:inset 3px 0 #e18b68;color:#fffefa}
+.done{color:var(--green)}.error{color:#a74435}
+.input,input{border-color:var(--line);border-radius:9px;background:var(--surface);color:var(--text)}
+.controls input{accent-color:var(--green)}
+button{border:1px solid #d5dfd4;border-radius:9px;background:var(--soft);color:var(--text)}
+button.primary{border-color:var(--green);background:var(--green);color:#fffefa}
+button:hover:not(:disabled){filter:none;transform:translateY(-1px);box-shadow:0 4px 10px #263b2c16}
+button:focus-visible,input:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+:root{--bg:#f3eee4;--surface:#fbf8f1;--soft:#eee8dc;--line:#ded5c7;--text:#292923;--muted:#777267;--green:#65745c;--green-dark:#4a5842;--coral:#c76c4e;--shadow:0 18px 42px #382a1712}
+body{background:radial-gradient(ellipse at 86% 0%,#fffaf0 0,transparent 34rem),linear-gradient(135deg,#f7f3eb,var(--bg) 60%,#eee8dc);font-family:"Segoe UI","Microsoft YaHei",sans-serif}
+.shell{border-color:var(--line);border-radius:16px;background:#fbf8f1;box-shadow:var(--shadow)}
+.panel{border-color:var(--line);border-radius:12px;background:#f7f3eb}
+h1{font-family:Georgia,"Noto Serif SC","Songti SC",serif}
+.chip,.stat,.badge{border-color:var(--line);background:#f0eadf;color:#4b4a40}
+.chip.active,.badge.current{border-color:#c76c4e;background:#f7e6da;color:#8f4935}
+.chip.cut{border-color:#8c9a7f;background:#e8ecdf;color:#4a5842}
+.chip.active.cut{outline-color:var(--coral)}
+.input,input{border-color:#d5ccbd;background:#fffdf8;color:var(--text)}
+.code{border:1px solid #3e483c;border-radius:11px;background:#292f29;color:#f2ecdf}
+.code-line.on{background:#414b3f;outline-color:#414b3f;box-shadow:inset 3px 0 var(--coral);color:#fffaf0}
+.done{color:#65745c}.error{color:#a74e37}
+button{border-color:#d8d0c3;background:#f1ede4;color:#4b4a40}
+button.primary{border-color:var(--coral);background:var(--coral);color:#fffaf3}
+button:hover:not(:disabled){background:#a74e37;box-shadow:0 5px 12px #9d503222}
 </style></head><body><main class="wrap"><div class="shell"><h1>P5519 · 等和连续段最多划分</h1><p>前缀和 + 枚举分段数：逐行观察 k、target、need、count 的变化</p>
 <div class="line"><label for="arr"><b>数组</b></label><input id="arr" class="input" value="1 2 3 3 3" aria-label="输入数组，用空格分隔"><button id="apply" class="primary">开始演示</button></div>
 <div class="line" style="margin-top:9px"><button data-example="1 2 3 3 3">普通样例</button><button data-example="-3 -4 5 -4 3">负数样例</button><button data-example="1 -1 2 -2 3 -3">总和为 0</button><button data-example="10 10 10 10">全部单元素段</button></div><div id="error" class="error" role="alert"></div>
