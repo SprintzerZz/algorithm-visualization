@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>P4104 环形链表判断｜Floyd 快慢指针交互演示</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f3eee4;
+  --paper-light: #fbf8f1;
+  --paper-deep: #ebe3d5;
+  --ink: #292923;
+  --muted: #777267;
+  --line: #ded5c7;
+  --terracotta: #c76c4e;
+  --terracotta-dark: #a74e37;
+  --olive: #65745c;
+  --olive-soft: #e8ecdf;
+  --shadow: 0 18px 42px #382a1712;
+  --blue: #526b65;
+  --orange: #b25c40;
+  --green: #65745c;
+}
+* { box-sizing: border-box; }
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: radial-gradient(ellipse at 88% 0%, #fffaf0 0, transparent 34rem),
+    linear-gradient(135deg, #f7f3eb, var(--paper) 60%, #eee8dc);
+  color: var(--ink);
+  font: 15px/1.65 "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+main { width: min(100% - 36px, 940px); margin: auto; padding: 48px 0 72px; }
+h1 { margin: 0 0 12px; font: 600 clamp(30px, 5vw, 46px)/1.2 Georgia, "Noto Serif SC", "Songti SC", serif; letter-spacing: -.035em; }
+h1::after { display: block; width: 58px; height: 3px; margin-top: 20px; border-radius: 3px; background: var(--terracotta); content: ""; }
+h3 { margin: 0 0 12px; font: 600 20px/1.4 Georgia, "Noto Serif SC", "Songti SC", serif; }
+p { color: var(--muted); line-height: 1.7; }
+.sub { margin: 0 0 26px; }
+.card { margin: 16px 0; padding: 22px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper-light); box-shadow: var(--shadow); }
+.controls, .row, .legend { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.controls { align-items: end; }
+.row { justify-content: space-between; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 13px; }
+.field input, select { width: 140px; padding: 10px 12px; border: 1px solid #d5ccbd; border-radius: 9px; background: #fffdf8; color: var(--ink); font: inherit; }
+select { width: auto; padding: 8px; }
+button { padding: 10px 16px; border: 1px solid #d8d0c3; border-radius: 9px; background: #f1ede4; color: var(--ink); font: 600 14px/1.4 "Segoe UI", "Microsoft YaHei", sans-serif; cursor: pointer; }
+button:hover:not(:disabled) { background: #e9e1d4; }
+button.primary { border-color: var(--terracotta); background: var(--terracotta); color: #fffaf3; }
+button.primary:hover:not(:disabled) { background: var(--terracotta-dark); }
+button:disabled { opacity: .42; cursor: not-allowed; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 2px; }
+.badge { display: inline-block; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--olive-soft); color: #4a5842; font-size: 13px; }
+.legend { gap: 18px; margin: 14px 0 16px; color: var(--muted); font-size: 13px; }
+.dot { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 50%; }
+svg { display: block; width: 100%; height: auto; min-height: 270px; overflow: visible; }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.metric { padding: 13px; border: 1px solid var(--line); border-radius: 11px; background: #f7f3eb; }
+.metric small { display: block; margin-bottom: 4px; color: var(--muted); }
+.metric strong { font-size: 22px; }
+#explanation { min-height: 46px; color: var(--ink); font-size: 16px; }
+.code { overflow-x: auto; padding: 14px 18px; border: 1px solid #3e483c; border-radius: 11px; background: #292f29; color: #f2ecdf; white-space: pre; font: 13px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.code .active { display: block; margin: 0 -12px; padding: 0 12px; border-left: 3px solid var(--terracotta); background: #414b3f; color: #fffaf0; }
+.tip, .footer { font-size: 13px; }
+.footer { margin-top: 22px; }
+@media (max-width: 600px) {
+  main { width: min(100% - 24px, 940px); padding: 26px 0 50px; }
+  .card { padding: 16px; }
+  .metrics { grid-template-columns: 1fr; }
+  .field input { width: 120px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body><main>
+<h1>P4104 环形链表判断 · Floyd 快慢指针</h1><p class="sub">交互式算法演示｜从判环到寻找入环节点，逐步观察 <b style="color:var(--blue)">slow</b> 和 <b style="color:var(--orange)">fast</b> 的移动。</p>
+<section class="card"><div class="controls">
+<label class="field">节点数 n（1～12）<input id="n" type="number" min="1" max="12" value="6"></label>
+<label class="field">入环下标 pos（-1 为无环）<input id="pos" type="number" min="-1" max="11" value="2"></label>
+<button id="apply">生成链表</button><span class="tip" id="hint">示例：6 个节点，尾节点指向下标 2</span>
+</div></section>
+<section class="card"><div class="row"><span class="badge" id="phase">等待开始</span><span id="counter" style="color:var(--muted)">第 0 步</span></div><div class="legend"><span><i class="dot" style="background:var(--blue)"></i>slow（慢指针）</span><span><i class="dot" style="background:var(--orange)"></i>fast（快指针）</span><span><i class="dot" style="background:var(--green)"></i>入环节点</span></div>
+<svg id="canvas" viewBox="0 0 860 345" role="img" aria-label="环形链表及快慢指针位置"></svg>
+<div class="metrics"><div class="metric"><small>slow 的下标</small><strong id="slowVal">0</strong></div><div class="metric"><small>fast 的下标</small><strong id="fastVal">0</strong></div><div class="metric"><small>检测结果</small><strong id="result">未完成</strong></div></div>
+<div class="row"><div><button id="prev">← 上一步</button> <button id="next" class="primary">下一步 →</button> <button id="play">▶ 自动播放</button> <button id="reset">↺ 重置</button></div><label class="field" style="flex-direction:row;align-items:center">播放间隔 <select id="speed"><option value="1300">慢</option><option value="800" selected>正常</option><option value="400">快</option></select></label></div>
+<p id="explanation" aria-live="polite"></p></section>
+<section class="card"><h3>算法关键代码（Java）</h3><div class="code" id="code"></div><p class="tip">代码高亮会随步骤移动。第一次相遇说明有环；将 slow 放回 head 后，两个指针每次只走一步，第二次相遇点就是入口。</p></section>
+<p class="footer">纯 HTML + CSS + JavaScript，无需联网或第三方库；可直接上传 GitHub Pages / Netlify。</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let n=6,pos=2,steps=[],index=0,timer=null;
+const sourceLines=[
+'Node slow = head, fast = head;',
+'while (fast != null && fast.next != null) {',
+'    slow = slow.next;',
+'    fast = fast.next.next;',
+'    if (slow == fast) {',
+'        slow = head;',
+'        while (slow != fast) {',
+'            slow = slow.next;',
+'            fast = fast.next;',
+'        }',
+'        return slow; // 入环节点',
+'    }',
+'}',
+'return null; // 无环'
+];
+function nextOf(x){if(x===null)return null;if(x<n-1)return x+1;return pos===-1?null:pos}
+function state(s,f,phase,message,line,done=false,answer=null){steps.push({s,f,phase,message,line,done,answer})}
+function buildSteps(){steps=[];let s=0,f=0;state(s,f,'初始化','slow 和 fast 都从头节点出发。',0);let iteration=0;
+while(f!==null&&nextOf(f)!==null){s=nextOf(s);f=nextOf(nextOf(f));iteration++;state(s,f,'第一阶段：检测环',`第 ${iteration} 轮：slow 走 1 步，fast 走 2 步。${f===null?'fast 已到达 null。':''}`,3);
+if(s===f){state(s,f,'第一次相遇','slow 和 fast 在同一节点相遇，证明存在环。',4);s=0;state(s,f,'第二阶段：寻找入口','把 slow 重置为 head，fast 留在相遇点；接下来都走 1 步。',5);let count=0;while(s!==f){s=nextOf(s);f=nextOf(f);count++;state(s,f,'第二阶段：寻找入口',`同步前进一步（第 ${count} 轮）。`,8)}state(s,f,'完成',`找到入环节点：下标 ${s}（节点值 ${s+1}）。`,10,true,s);return}}
+state(s,f,'完成','fast 到达链表末尾（null），不存在环，返回 -1。',13,true,-1)}
+function stop(){if(timer){clearInterval(timer);timer=null}$('play').textContent='▶ 自动播放'}
+function init(){stop();let x=Number($('n').value),y=Number($('pos').value);if(!Number.isInteger(x)||x<1||x>12||!Number.isInteger(y)||y< -1||y>=x){alert('请输入合法参数：1 ≤ n ≤ 12，-1 ≤ pos < n');return}n=x;pos=y;index=0;buildSteps();$('hint').textContent=pos===-1?'当前为无环链表':`最后一个节点指向下标 ${pos}（值 ${pos+1}）`;render()}
+function shape(tag,attrs,parent=$('canvas'),content=''){let e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(let [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(content)e.textContent=content;parent.appendChild(e);return e}
+function render(){let st=steps[index],svg=$('canvas');svg.replaceChildren();const defs=shape('defs',{});for(let [id,color] of [['normal','#9a9183'],['cycle','#65745c']]){let marker=shape('marker',{id:'arr-'+id,markerWidth:9,markerHeight:9,refX:8,refY:4.5,orient:'auto'},defs);shape('path',{d:'M0 0 L9 4.5 L0 9',fill:'none',stroke:color,'stroke-width':1.5},marker)}
+let w=860,margin=40,cw=(w-2*margin)/Math.max(n,2),r=Math.min(23,cw*.29),coords=[];
+// 多节点使用两行蛇形排列，保证手机端画面不拥挤
+let columns=n<=7?n:6,spacing=780/Math.max(columns-1,1),first=50;
+for(let i=0;i<n;i++){let row=Math.floor(i/columns),col=i%columns;let cx=first+(row%2===0?col:columns-1-col)*spacing;let cy=115+row*110;coords.push({x:cx,y:cy})}
+for(let i=0;i<n-1;i++){let a=coords[i],b=coords[i+1],dx=b.x-a.x,dy=b.y-a.y,dist=Math.hypot(dx,dy),ux=dx/dist,uy=dy/dist;shape('path',{d:`M${a.x+ux*r} ${a.y+uy*r} L${b.x-ux*(r+9)} ${b.y-uy*(r+9)}`,fill:'none',stroke:'#9a9183','stroke-width':2,'marker-end':'url(#arr-normal)'})}
+if(pos!==-1){let a=coords[n-1],b=coords[pos];let bottom=Math.min(325,Math.max(...coords.map(v=>v.y))+78);if(n===1){shape('path',{d:`M${a.x+17} ${a.y-12} C${a.x+78} ${a.y-100}, ${a.x-63} ${a.y-100}, ${a.x-14} ${a.y-15}`,stroke:'#65745c','stroke-width':2.5,fill:'none','marker-end':'url(#arr-cycle)'})}else{shape('path',{d:`M${a.x} ${a.y+r} C${a.x} ${bottom}, ${b.x} ${bottom}, ${b.x} ${b.y+r+9}`,stroke:'#65745c','stroke-width':2.5,fill:'none','marker-end':'url(#arr-cycle)'})}}
+for(let i=0;i<n;i++){let a=coords[i];shape('circle',{cx:a.x,cy:a.y,r,fill:i===pos?'#e8ecdf':'#fffdf8',stroke:i===pos?'#65745c':'#a9a194','stroke-width':i===pos?3:2});shape('text',{x:a.x,y:a.y+5,'text-anchor':'middle','font-size':16,'font-weight':700,fill:'#292923'},svg,String(i+1));shape('text',{x:a.x,y:a.y+r+17,'text-anchor':'middle','font-size':11,fill:'#777267'},svg,`下标 ${i}`)}
+for(let [key,color,offset] of [['s','#526b65',-19],['f','#b25c40',19]]){let i=st[key];if(i===null){shape('text',{x:810,y:key==='s'?23:42,'text-anchor':'end','font-size':15,fill:color},svg,key==='s'?'slow=null':'fast=null');continue}let a=coords[i];shape('line',{x1:a.x+offset,y1:a.y-55,x2:a.x+offset*.35,y2:a.y-r-6,stroke:color,'stroke-width':2});shape('rect',{x:a.x+offset-28,y:a.y-78,width:56,height:23,rx:7,fill:color});shape('text',{x:a.x+offset,y:a.y-62,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#fffaf3'},svg,key==='s'?'slow':'fast')}
+$('phase').textContent=st.phase;$('counter').textContent=`第 ${index} 步 / 共 ${steps.length-1} 步`;$('slowVal').textContent=st.s===null?'null':st.s;$('fastVal').textContent=st.f===null?'null':st.f;$('result').textContent=st.done?(st.answer===-1?'-1':String(st.answer)):'未完成';$('explanation').textContent=st.message;$('prev').disabled=index===0;$('next').disabled=index===steps.length-1;
+$('code').replaceChildren();sourceLines.forEach((line,i)=>{let span=document.createElement('span');span.textContent=line+'\n';if(i===st.line)span.className='active';$('code').appendChild(span)});
+if(st.done)stop()}
+$('apply').onclick=init;$('next').onclick=()=>{if(index<steps.length-1){index++;render()}};$('prev').onclick=()=>{stop();if(index>0){index--;render()}};$('reset').onclick=()=>{stop();index=0;render()};$('play').onclick=()=>{if(timer){stop();return}if(index===steps.length-1)index=0;render();$('play').textContent='Ⅱ 暂停';timer=setInterval(()=>{if(index<steps.length-1){index++;render()}else stop()},Number($('speed').value))};$('speed').onchange=()=>{if(timer){stop();$('play').click()}};
+init();
+</script></body></html>
