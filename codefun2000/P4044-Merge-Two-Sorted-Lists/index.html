@@ -1,0 +1,92 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>P4044 升序链表合并｜交互演示</title><style>:root {
+  color-scheme: light;
+  --paper: #f3eee4;
+  --paper-light: #fbf8f1;
+  --paper-deep: #ebe3d5;
+  --ink: #292923;
+  --muted: #777267;
+  --line: #ded5c7;
+  --terracotta: #c76c4e;
+  --terracotta-dark: #a74e37;
+  --olive: #65745c;
+  --olive-soft: #e8ecdf;
+  --shadow: 0 18px 42px #382a1712;
+  --a: #526b56;
+  --b: #a74e37;
+  --green: #4a6b4d;
+  --red: #a03937;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at 88% 0%, #fffaf0 0, transparent 34rem),
+    linear-gradient(135deg, #f7f3eb, var(--paper) 60%, #eee8dc);
+  color: var(--ink);
+  font: 15px/1.65 "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+main { max-width: 1150px; margin: auto; padding: 48px 18px 70px; }
+h1 { margin: 0 0 12px; font: 600 clamp(30px, 5vw, 46px)/1.2 Georgia, "Noto Serif SC", "Songti SC", serif; letter-spacing: -.035em; }
+h1::after { display: block; width: 58px; height: 3px; margin-top: 20px; border-radius: 3px; background: var(--terracotta); content: ""; }
+p { color: var(--muted); line-height: 1.7; }
+h2 { margin: 0 0 16px; font: 600 20px/1.4 Georgia, "Noto Serif SC", "Songti SC", serif; }
+.panel { margin-top: 17px; padding: 20px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper-light); box-shadow: var(--shadow); }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.field { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--muted); }
+input[type=text], select { padding: 10px 12px; border: 1px solid #d5ccbd; border-radius: 9px; background: #fffdf8; color: var(--ink); font: inherit; }
+input[type=text] { width: min(230px, 72vw); }
+button { padding: 10px 14px; border: 1px solid #d8d0c3; border-radius: 9px; background: #f1ede4; color: var(--ink); font: 600 14px/1.4 "Segoe UI", "Microsoft YaHei", sans-serif; cursor: pointer; }
+button:hover:not(:disabled) { background: #e9e1d4; }
+button:disabled { opacity: .42; cursor: not-allowed; }
+button.primary { border-color: var(--terracotta); background: var(--terracotta); color: #fffaf3; }
+button.primary:hover:not(:disabled) { background: var(--terracotta-dark); }
+button.danger { border-color: #bb9285; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 2px; }
+input[type=range] { flex: 1; min-width: 100px; accent-color: var(--terracotta); }
+.canvas { overflow-x: auto; padding: 14px 0 5px; }
+.stage { min-width: 710px; }
+.lane { display: flex; align-items: center; min-height: 125px; position: relative; }
+.lane-label { width: 98px; flex: none; color: var(--muted); font-size: 14px; }
+.nodes { display: flex; align-items: center; flex-wrap: nowrap; }
+.node { position: relative; display: flex; align-items: center; justify-content: center; min-width: 70px; height: 64px; border: 2px solid #9b9f90; border-radius: 10px; background: #f0ede4; font-size: 20px; font-weight: 700; transition: opacity .22s, transform .22s; }
+.node.a { border-color: var(--a); background: #edf1e8; }
+.node.b { border-color: var(--b); background: #f7e9dc; }
+.node.out { border-color: var(--green); background: #dfe8db; }
+.node.picked { box-shadow: 0 0 0 3px #c76c4e66; transform: translateY(-4px); }
+.node.dim { opacity: .35; }
+.arrow { min-width: 37px; color: #8c897b; font-size: 26px; text-align: center; }
+.ptr { position: absolute; top: -29px; left: 50%; transform: translateX(-50%); padding: 2px 5px; border-radius: 6px; background: #fffaf2; white-space: nowrap; font-size: 12px; font-weight: 700; }
+.ptr.bottom { top: auto; bottom: -27px; }
+.ptr.list1 { color: var(--a); }
+.ptr.list2 { color: var(--b); }
+.ptr.tail { color: var(--green); }
+.ptr.dummy { color: #815e69; }
+.nil { padding: 15px; color: var(--muted); font-size: 15px; }
+.summary { min-height: 86px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: #f5f0e7; line-height: 1.7; }
+.small { color: var(--muted); font-size: 13px; }
+.step-title { color: var(--ink); font-size: 18px; font-weight: 750; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+.code { margin: 0; padding: 12px 10px; border: 1px solid #3e483c; border-radius: 11px; background: #292f29; color: #f2ecdf; white-space: pre-wrap; word-break: break-word; font: 13px/1.8 ui-monospace, Consolas, monospace; }
+.code .hl { display: block; margin: 0 -10px; padding: 0 10px; border-left: 3px solid var(--terracotta); background: #414b3f; color: #fffaf0; }
+.code .plain { display: block; padding: 0 10px; }
+.note { color: var(--ink); font-size: 14px; }
+.status { color: var(--green); font-weight: 700; }
+.bad { color: var(--red); }
+@media (max-width: 760px) {
+  main { padding: 28px 12px 48px; }
+  .two { grid-template-columns: 1fr; }
+  .panel { padding: 14px; }
+  .lane-label { width: 85px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}</style></head><body><main><h1>P4044 升序链表合并 · 交互动画</h1><p>对应你的 Java <code>merge(list1, list2)</code>。逐步观察 <b>list1</b>、<b>list2</b> 和 <b>tail</b> 如何移动；也可以切换到原始错误写法，查看为什么 <code>tail = list1 / list2</code> 不对。</p><section class="panel"><div class="controls"><label class="field">链表 1 <input id="inputA" type="text" value="1 3 5" aria-label="链表1"></label><label class="field">链表 2 <input id="inputB" type="text" value="2 4 6" aria-label="链表2"></label><button class="primary" id="build">生成动画</button></div><div class="controls" style="margin-top:14px"><label class="field">代码模式 <select id="mode"><option value="correct">✅ 正确：tail = tail.next</option><option value="wrong">❌ 原代码：tail = list1 / list2</option></select></label><span class="small">两条输入链表需分别升序排列，支持负数和重复数字。</span></div></section><section class="panel"><div class="controls"><button id="reset">↺ 重置</button><button id="prev">← 上一步</button><button class="primary" id="next">下一步 →</button><button id="play">▶ 自动播放</button><label class="field">速度 <select id="speed"><option value="1600">慢</option><option value="950" selected>中</option><option value="450">快</option></select></label></div><div class="controls" style="margin-top:14px"><input type="range" id="seek" min="0" max="1" value="0" aria-label="步骤进度"><span id="counter" class="small">0 / 0</span></div></section><section class="panel"><h2>指针与链表节点</h2><div class="canvas"><div class="stage"><div class="lane"><div class="lane-label">链表 1</div><div class="nodes" id="laneA"></div></div><div class="lane"><div class="lane-label">链表 2</div><div class="nodes" id="laneB"></div></div><div class="lane"><div class="lane-label">已合并</div><div class="nodes" id="laneOut"></div></div></div></div><div class="summary" style="margin-top:10px"><div class="step-title" id="stepTitle"></div><div id="explain" class="note"></div></div><p class="small">上方链表展示原节点目前是否尚未被处理；“已合并”区域展示指针连接后的实际结果。节点编号仅用于区分重复值。</p></section><div class="two"><section class="panel"><h2>对应 Java 代码</h2><pre id="code" class="code"></pre></section><section class="panel"><h2>当前状态</h2><div id="details" style="line-height:2"></div><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><h2>关键区别</h2><p><code>tail.next = list1;</code> 是把节点接到结果链表尾部；<code>list1 = list1.next;</code> 是移动输入指针。此后 <b>正确的尾指针</b> 必须指向刚刚接入的节点，即 <code>tail = tail.next;</code>。</p><p>原写法把 <code>tail</code> 指向了“尚未处理的下一个节点”，可能覆盖已有连接，甚至形成环。</p></section></div></main><script>
+const $=id=>document.getElementById(id);let steps=[],pos=0,timer=null,mode='correct';
+const htmlEscape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function parse(v){if(!v.trim())return [];const p=v.trim().split(/[\s,，]+/);if(p.some(s=>!/^[-+]?\d+$/.test(s)))throw Error('只允许输入整数，请使用空格或逗号分隔');return p.map(Number)}
+function makeSteps(a,b,wrong){const all=[...a.map((v,i)=>({id:'a'+i,v,from:'a'})),...b.map((v,i)=>({id:'b'+i,v,from:'b'}))];let i=0,j=0,arr=[],tail='dummy',links={},cnt=0;const result=[];function snap(title,explain,highlight='',picked=null){result.push({title,explain,highlight,picked,i,j,arr:arr.slice(),tail,links:{...links},count:cnt,all})}snap('初始化','创建虚拟头节点 dummy，tail = dummy；list1 和 list2 分别指向各自头节点。','init');while(i<a.length&&j<b.length){const chooseA=a[i]<=b[j],chosen=chooseA?'a'+i:'b'+j, value=chooseA?a[i]:b[j];snap('比较两个头节点',`比较 ${a[i]} 和 ${b[j]}，选择较小的 ${value}（相等时优先选 list1）。`,'compare');links[tail]=chosen;arr.push(chosen);snap('连接节点',`执行 tail.next = ${chooseA?'list1':'list2'}，把 ${value} 接到结果链表。`,'connect',chosen);if(chooseA)i++;else j++;snap('移动输入指针',`执行 ${chooseA?'list1 = list1.next':'list2 = list2.next'}，输入指针移向下一个尚未处理的节点。`,'advance',chosen);if(wrong){tail=chooseA?(i<a.length?'a'+i:null):(j<b.length?'b'+j:null);snap('❌ 错误更新 tail',`原代码执行 tail = ${chooseA?'list1':'list2'}，tail 指向了下一待处理节点${tail?'':'（null）'}，不再是已合并链表的最后一个节点。`,'wrong',chosen);if(tail===null){snap('❌ 运行异常','下一次执行 tail.next 时可能出现 NullPointerException；动画在此停止。','error');return result}}else{tail=chosen;snap('✅ 正确更新 tail',`执行 tail = tail.next，tail 现在指向刚刚连接的节点 ${value}。`,'tail',chosen)}cnt++;if(result.length>1200)break}const rem=[...a.slice(i).map((_,t)=>'a'+(i+t)),...b.slice(j).map((_,t)=>'b'+(j+t))];if(rem.length){links[tail]=rem[0];arr.push(...rem);snap('拼接剩余节点',`一条链表已经遍历结束，执行 tail.next = (list1 != null) ? list1 : list2，剩余节点 ${rem.map(id=>all.find(o=>o.id===id).v).join(' → ')} 直接接到后面。`,'remain')}snap('完成',`返回 dummy.next，结果：${arr.map(id=>all.find(o=>o.id===id).v).join(' → ')||'空链表'}。`,'done');return result}
+function renderLane(el,items,idx,pointer,step,tag){if(!items.length){el.innerHTML='<span class="nil">null（空链表）</span>';return}el.innerHTML=items.map((x,k)=>`<div class="node ${tag} ${k<idx?'dim':''} ${step.picked===x.id?'picked':''}"><span>${x.v}</span>${k===idx?`<span class="ptr ${pointer}">${pointer}</span>`:''}<span class="ptr bottom" style="color:#8b8173">${x.id}</span></div>${k===items.length-1?'':'<span class="arrow">→</span>'}`).join('')+(idx>=items.length?`<span class="nil">${pointer} → null</span>`:'')}
+function renderOut(s){let v=s.arr.map(id=>s.all.find(o=>o.id===id));$('laneOut').innerHTML='<div class="node" style="border-color:#b88d73;min-width:78px">dummy'+(s.tail==='dummy'?'<span class="ptr tail">tail</span>':'')+'</div>'+(v.length?'<span class="arrow">→</span>':'')+v.map((x,k)=>`<div class="node out ${s.picked===x.id?'picked':''}">${x.v}${s.tail===x.id?'<span class="ptr tail">tail</span>':''}</div>${k<v.length-1?'<span class="arrow">→</span>':''}`).join('')+(s.tail===null?'<span class="nil bad">tail → null</span>':'');}
+const codeLines=[['init','Node dummy = new Node(-1);\nNode tail = dummy;'],['compare','while (list1 != null && list2 != null) {\n    if (list1.value > list2.value) {'],['connect','        tail.next = list2; // 或 list1'],['advance','        list2 = list2.next; // 或 list1'],['tail','        tail = tail.next; // 正确写法'],['wrong','        tail = list2; // ❌ 原代码（或 list1）'],['remain','tail.next = (list1 != null) ? list1 : list2;'],['done','return dummy.next;'],['error','// tail == null，继续执行可能空指针异常']];
+function render(){const s=steps[pos];if(!s)return;const a=s.all.filter(x=>x.from==='a'),b=s.all.filter(x=>x.from==='b');renderLane($('laneA'),a,s.i,'list1',s,'a');renderLane($('laneB'),b,s.j,'list2',s,'b');renderOut(s);$('stepTitle').textContent=`第 ${pos} 步 · ${s.title}`;$('explain').textContent=s.explain;$('counter').textContent=`${pos} / ${steps.length-1}`;$('seek').max=steps.length-1;$('seek').value=pos;$('prev').disabled=pos===0;$('next').disabled=pos===steps.length-1;const left=a[s.i],right=b[s.j];const tailObj=s.all.find(x=>x.id===s.tail);$('details').innerHTML=`<div>list1：<b style="color:var(--a)">${left?left.v+' ('+left.id+')':'null'}</b></div><div>list2：<b style="color:var(--b)">${right?right.v+' ('+right.id+')':'null'}</b></div><div>tail：<b style="color:var(--green)">${tailObj?tailObj.v+' ('+tailObj.id+')':s.tail==='dummy'?'dummy':'null'}</b></div><div>当前结果：<b>${s.arr.map(id=>s.all.find(x=>x.id===id).v).join(' → ')||'（空）'}</b></div>`;$('code').innerHTML=codeLines.filter(([name])=>name!== (mode==='correct'?'wrong':'tail')).map(([name,txt])=>`<span class="${s.highlight===name?'hl':'plain'}">${htmlEscape(txt)}</span>`).join('');if(pos===steps.length-1)stop()}
+function stop(){if(timer)clearInterval(timer);timer=null;$('play').textContent='▶ 自动播放'}function go(n){pos=Math.max(0,Math.min(steps.length-1,n));render()}function build(){stop();try{let a=parse($('inputA').value),b=parse($('inputB').value);if(a.length+b.length>24)throw Error('为了便于观察，两个链表合计最多输入 24 个节点');if(a.some((v,i)=>i&&v<a[i-1])||b.some((v,i)=>i&&v<b[i-1]))throw Error('每条链表必须已按升序排列');mode=$('mode').value;steps=makeSteps(a,b,mode==='wrong');pos=0;render()}catch(e){alert(e.message)}}$('build').onclick=build;$('mode').onchange=build;$('prev').onclick=()=>{stop();go(pos-1)};$('next').onclick=()=>{stop();go(pos+1)};$('reset').onclick=()=>{stop();go(0)};$('seek').oninput=e=>{stop();go(+e.target.value)};$('play').onclick=()=>{if(timer){stop();return}if(pos===steps.length-1)go(0);$('play').textContent='⏸ 暂停';timer=setInterval(()=>{if(pos>=steps.length-1){stop();return}go(pos+1)},+$('speed').value)};$('speed').onchange=()=>{if(timer){stop();$('play').click()}};build();
+</script></body></html>
