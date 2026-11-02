@@ -47,6 +47,9 @@ h1::after {
   background: var(--card);
   box-shadow: 0 12px 30px #382a1710;
 }
+.layout { grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); }
+.layout > .panel { min-width: 0; }
+.codebox { max-width: 100%; }
 input[type=text], select {
   border-color: #d5ccbd !important;
   border-radius: 9px;
@@ -130,6 +133,10 @@ button.play:hover:not(:disabled) { background: #4a5842; }
     transition-duration: .01ms !important;
     animation-duration: .01ms !important;
   }
+}
+
+@media (max-width: 850px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
 }
 </style>
 </head>
