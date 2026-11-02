@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>P4046 移除链表倒数第 N 个结点｜交互演示</title>
+<style>
+:root{--bg:#f3f6fc;--card:#fff;--text:#17243c;--muted:#66768d;--blue:#2962ff;--green:#079b79;--red:#e14d5a;--line:#ccd5e2;--code:#162237}*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#eef3ff 0%,#f8fafc 65%);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI','Microsoft YaHei',sans-serif}.wrap{max-width:1110px;margin:auto;padding:30px 20px 48px}h1{font-size:clamp(24px,3vw,34px);margin:0 0 10px}p{line-height:1.65}.subtitle{color:var(--muted);margin:0 0 26px}.layout{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}.panel{background:var(--card);padding:22px;border-radius:18px;box-shadow:0 10px 40px #2c426314;border:1px solid #e8edf5}.panel h2{font-size:19px;margin:0 0 18px}.fields{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted);font-weight:650}.field input{width:260px;max-width:100%;border:1px solid #d5deea;border-radius:10px;padding:11px;font-size:15px;color:var(--text);outline-color:#9ab4ff}.field.small input{width:88px}button{cursor:pointer;border:0;background:var(--blue);color:white;border-radius:10px;padding:11px 15px;font-size:14px;font-weight:650;transition:transform .12s,opacity .12s}button:hover:not(:disabled){transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed}button.secondary{background:#eaf0ff;color:#2653ba}button.ghost{background:#f0f3f8;color:#475a77}.error{font-size:13px;color:#b52638;min-height:20px;margin-top:8px}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:4px 0 15px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;background:var(--blue)}.dot.green{background:var(--green)}.dot.red{background:var(--red)}.canvas{overflow:auto;border:1px solid #e6edf5;border-radius:14px;background:linear-gradient(0deg,#fbfcff,#f8faff);padding:15px 6px;min-height:230px}svg{display:block;min-width:550px;width:100%;height:205px}.stage{margin:16px 0 12px;padding:15px;background:#f0f5ff;border-radius:12px;min-height:102px}.stage strong{display:block;margin-bottom:6px}.stage p{margin:0;color:#435573;font-size:14px}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.stagecount{margin-left:auto;font-size:13px;color:#66768d}.progress{margin:13px 0 0;background:#e9eef8;height:7px;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#3478ff,#0db596);width:0%;transition:width .2s}.codebox{background:var(--code);border-radius:13px;color:#d6e5ff;padding:14px 0;overflow:auto;font:13px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace}.code-line{padding:0 16px;white-space:pre;display:block}.code-line.active{background:#315288;color:white;border-left:3px solid #73d3ff;padding-left:13px}.tip{font-size:13px;color:#6b7c93;margin-top:15px}.result{margin-top:16px;background:#ecfaf5;border:1px solid #c0ecd8;padding:12px;border-radius:12px;color:#137458;display:none}.result.show{display:block}.foot{margin-top:22px;font-size:14px;color:#53657f}.foot code{background:#eaf0f8;padding:2px 5px;border-radius:4px}.speed{display:flex;align-items:center;gap:7px;color:#66768d;font-size:13px}.speed select{border:1px solid #d5deea;border-radius:8px;padding:6px;background:#fff;color:#243453}@media(max-width:850px){.layout{grid-template-columns:1fr}.panel{padding:17px}.wrap{padding:21px 12px}.field input{width:210px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f3eee4;
+  --paper-light: #fbf8f1;
+  --paper-deep: #ebe3d5;
+  --ink: #292923;
+  --muted: #777267;
+  --line: #ded5c7;
+  --terracotta: #c76c4e;
+  --terracotta-dark: #a74e37;
+  --olive: #65745c;
+  --olive-soft: #e8ecdf;
+  --shadow: 0 18px 42px #382a1712;
+  --slow: var(--olive);
+  --fast: var(--terracotta-dark);
+  --removed: #a03937;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 88% 0%, #fffaf0 0, transparent 34rem),
+    linear-gradient(135deg, #f7f3eb, var(--paper) 60%, #eee8dc);
+  color: var(--ink);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+.wrap { max-width: 1150px; padding-top: 40px; }
+h1, .panel h2 { font-family: Georgia, "Noto Serif SC", "Songti SC", serif; }
+h1 { font-weight: 600; letter-spacing: -.025em; }
+.panel {
+  min-width: 0;
+  border-color: var(--line);
+  border-radius: 15px;
+  background: var(--paper-light);
+  box-shadow: var(--shadow);
+}
+.layout { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.field { color: var(--muted); }
+.field input, .speed select {
+  border-color: #d5ccbd;
+  border-radius: 9px;
+  background: #fffdf8;
+  color: var(--ink);
+}
+button {
+  border: 1px solid var(--terracotta);
+  border-radius: 9px;
+  background: var(--terracotta);
+  color: #fffaf3;
+}
+button:hover:not(:disabled) {
+  transform: none;
+  background: var(--terracotta-dark);
+}
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 2px;
+}
+button.secondary, button.ghost {
+  border-color: var(--line);
+  background: #f1ede4;
+  color: var(--ink);
+}
+button.secondary:hover:not(:disabled), button.ghost:hover:not(:disabled) {
+  background: var(--paper-deep);
+}
+.legend, .tip, .foot { color: var(--muted); }
+.dot { background: var(--slow); }
+.dot.green { background: var(--fast); }
+.dot.red { background: var(--removed); }
+.canvas {
+  border-color: var(--line);
+  border-radius: 12px;
+  background: #f5f0e7;
+}
+.stage {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--olive-soft);
+}
+.stage strong { color: var(--olive); }
+.stage p { color: #4b4941; }
+.progress { background: #e7e0d4; }
+.fill { background: linear-gradient(90deg, var(--olive), var(--terracotta)); }
+.codebox { background: #292f29; color: #f2ecdf; }
+.code-line.active {
+  border-left: 3px solid var(--terracotta);
+  background: #414b3f;
+  color: #fffaf0;
+  padding-left: 13px;
+}
+.result {
+  border-color: #d4ddca;
+  background: var(--olive-soft);
+  color: #42533b;
+}
+.error { color: var(--removed); }
+.foot code { background: var(--paper-deep); }
+@media (max-width: 850px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: 17px; }
+  .wrap { padding: 25px 12px 40px; }
+  .field input { width: min(210px, 100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>P4046 · 移除链表倒数第 N 个结点</h1>
+<p class="subtitle">Java 双指针 · 虚拟头节点 dummy · 可逐步运行的交互式过程图</p>
+<div class="layout">
+  <section class="panel">
+    <h2>① 设置链表</h2>
+    <div class="fields">
+      <label class="field">节点值（逗号或空格分隔）<input id="values" value="1, 2, 3, 4, 5" aria-label="链表节点值" /></label>
+      <label class="field small">倒数第 N 个<input id="nth" value="2" type="number" min="1" step="1" aria-label="删除倒数第几个" /></label>
+      <button id="build">重新生成</button>
+    </div>
+    <div id="error" class="error" aria-live="polite"></div>
+    <h2 style="margin-top:16px">② 观察快慢指针</h2>
+    <div class="legend"><span><i class="dot"></i>slow</span><span><i class="dot green"></i>fast</span><span><i class="dot red"></i>待删除节点</span></div>
+    <div class="canvas"><svg id="diagram" role="img" aria-label="链表以及 fast slow 指针的位置"></svg></div>
+    <div class="stage" aria-live="polite"><strong id="stageTitle"></strong><p id="stageText"></p></div>
+    <div class="toolbar">
+      <button class="secondary" id="prev">← 上一步</button><button id="next">下一步 →</button>
+      <button class="ghost" id="play">▶ 自动播放</button><button class="ghost" id="reset">↻ 重置</button>
+      <span class="speed">速度 <select id="speed"><option value="1300">慢</option><option selected value="800">正常</option><option value="420">快</option></select></span>
+      <span class="stagecount" id="counter"></span>
+    </div>
+    <div class="progress"><div class="fill" id="progress"></div></div>
+    <div class="result" id="result"></div>
+  </section>
+  <section class="panel">
+    <h2>③ Java 代码同步高亮</h2>
+    <div class="codebox" id="code"></div>
+    <p class="tip">为什么先走 <b>n + 1</b> 步？因为 fast 和 slow 都从 dummy 出发，fast 先走 n + 1 步，最终 slow 刚好停在待删除节点的前驱位置。</p>
+    <p class="tip">为了方便理解，图中的 <b>D</b> 表示 dummy，<b>null</b> 表示链表结束。删除时改变的是节点的 <code>next</code> 指针，并不是删除数组元素。</p>
+  </section>
+</div>
+<p class="foot">操作方法：输入链表与 N → 点击「重新生成」→ 用「下一步」或「自动播放」查看过程。支持删除头节点、尾节点与单节点链表。页面无第三方依赖，可直接用于博客或 GitHub Pages。</p>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const lines=[
+'Node dummy = new Node(-1);',
+'dummy.next = head;',
+'Node fast = dummy, slow = dummy;',
+'for (int i = 0; i <= n; i++) {',
+'    fast = fast.next;',
+'}',
+'while (fast != null) {',
+'    fast = fast.next;',
+'    slow = slow.next;',
+'}',
+'slow.next = slow.next.next;',
+'return dummy.next;'
+];
+const codeLines=[];
+lines.forEach((s,i)=>{const span=document.createElement('span');span.className='code-line';span.textContent=String(i+1).padStart(2,' ')+'  '+s;$('code').appendChild(span);codeLines.push(span)});
+let nums=[1,2,3,4,5],n=2,steps=[],index=0,timer=null;
+function makeSteps(){
+ const len=nums.length;const s=[];let fast=0,slow=0;
+ s.push({fast,slow,line:[0,1,2],title:'初始化 dummy、fast 和 slow',text:'增加虚拟头节点 D → '+nums.join(' → ')+'。fast 与 slow 都从 dummy 开始，便于删除原头节点。'});
+ for(let i=1;i<=n+1;i++){fast++;s.push({fast,slow,line:[3,4,5],title:`fast 先走 ${i} / ${n+1} 步`,text:`fast 移动到 ${fast===len+1?'null':fast===0?'dummy':'节点 '+nums[fast-1]}，slow 暂时不动。`})}
+ let k=0;while(fast<=len){fast++;slow++;k++;s.push({fast,slow,line:[6,7,8,9],title:`fast、slow 同时移动（第 ${k} 轮）`,text:`fast 到 ${fast===len+1?'null':'节点 '+nums[fast-1]}；slow 到 ${slow===0?'dummy':'节点 '+nums[slow-1]}。`})}
+ const deletedIndex=slow;
+ s.push({fast,slow,line:[10],title:'执行删除：slow.next = slow.next.next',text:`slow 停在${slow===0?' dummy':'节点 '+nums[slow-1]}，绕过它后面的节点 ${nums[deletedIndex]}，指向再下一个节点。`,done:true});
+ s.push({fast,slow,line:[11],title:'完成：返回 dummy.next',text:'最终链表为：'+nums.filter((_,i)=>i!==deletedIndex).join(' → ').replace(/^$/,'空链表'),done:true,finish:true});
+ return s;
+}
+function element(tag,attrs={},str=''){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(str)e.textContent=str;return e;}
+function draw(){
+ const step=steps[index],svg=$('diagram');svg.replaceChildren();const width=Math.max(550, (nums.length+2)*105+30);svg.setAttribute('viewBox',`0 0 ${width} 205`);svg.style.minWidth=width+'px';
+ const x=i=>22+i*105;const total=nums.length+1;
+ const defs=element('defs'),marker=element('marker',{id:'relink-arrow',markerWidth:8,markerHeight:8,refX:8,refY:4,orient:'auto',markerUnits:'strokeWidth'});marker.appendChild(element('path',{d:'M 0 0 L 8 4 L 0 8 Z',fill:'#65745c'}));defs.appendChild(marker);svg.appendChild(defs);
+ for(let i=0;i<total;i++){
+   const val=i===0?'D':String(nums[i-1]);const isGone=!!step.done && i===step.slow+1;
+   const isTarget=!step.done&&i===nums.length-n+1;
+   if(i<total-1){
+     if(!(step.done&&i===step.slow)){svg.appendChild(element('path',{d:`M ${x(i)+72} 101 L ${x(i+1)-7} 101`,stroke:'#b6a789','stroke-width':2,fill:'none'}));svg.appendChild(element('path',{d:`M ${x(i+1)-13} 95 L ${x(i+1)-5} 101 L ${x(i+1)-13} 107`,stroke:'#b6a789','stroke-width':2,fill:'none'}))}
+   }
+   const border=isGone?'#a03937':step.slow===i?'#65745c':step.fast===i?'#a74e37':isTarget?'#a03937':'#b6a789';
+   const fill=isGone?'#f3e0d5':step.slow===i?'#e8ecdf':step.fast===i?'#f3e0d5':isTarget?'#f3e0d5':'#fbf8f1';
+   const rect=element('rect',{x:x(i),y:79,width:72,height:44,rx:10,fill,stroke:border,'stroke-width':2});if(isGone)rect.setAttribute('stroke-dasharray','5 4');svg.appendChild(rect);
+   svg.appendChild(element('text',{x:x(i)+36,y:106,'font-size':16,'font-weight':650,'text-anchor':'middle',fill:isGone?'#a03937':'#292923'},val));
+   if(isGone){svg.appendChild(element('path',{d:`M ${x(i)+12} 86 L ${x(i)+61} 116`,stroke:'#a03937','stroke-width':2.5}))}
+   if(step.slow===i){svg.appendChild(element('text',{x:x(i)+36,y:47,'font-size':14,'font-weight':700,fill:'#65745c','text-anchor':'middle'},'slow'));svg.appendChild(element('path',{d:`M ${x(i)+36} 54 L ${x(i)+36} 74`,stroke:'#65745c','stroke-width':2}))}
+   if(step.fast===i){svg.appendChild(element('text',{x:x(i)+36,y:160,'font-size':14,'font-weight':700,fill:'#a74e37','text-anchor':'middle'},'fast'));svg.appendChild(element('path',{d:`M ${x(i)+36} 127 L ${x(i)+36} 143`,stroke:'#a74e37','stroke-width':2}))}
+ }
+ const nullX=x(total);
+ svg.appendChild(element('text',{x:nullX+17,y:106,'font-size':16,fill:'#777267'},'null'));
+ if(step.fast===total){svg.appendChild(element('text',{x:nullX+16,y:160,'font-size':14,'font-weight':700,fill:'#a74e37','text-anchor':'middle'},'fast'));svg.appendChild(element('path',{d:`M ${nullX+16} 126 L ${nullX+16} 143`,stroke:'#a74e37','stroke-width':2}))}
+ if(step.done){const from=step.slow,to=step.slow+2,targetX=to<=nums.length?x(to)+36:nullX+8,targetY=to<=nums.length?78:99,startX=x(from)+80;svg.appendChild(element('path',{d:`M ${x(from)+72} 101 L ${startX} 101 L ${startX} 26 L ${targetX} 26 L ${targetX} ${targetY}`,stroke:'#65745c','stroke-width':2.5,fill:'none','stroke-dasharray':'6 4','marker-end':'url(#relink-arrow)'}));svg.appendChild(element('text',{x:(startX+targetX)/2,y:20,'text-anchor':'middle',fill:'#65745c','font-size':12},'重连 next'))}
+ $('stageTitle').textContent=step.title;$('stageText').textContent=step.text;$('counter').textContent=`${index+1} / ${steps.length}`;$('progress').style.width=((index+1)/steps.length*100)+'%';
+ $('prev').disabled=index===0;$('next').disabled=index===steps.length-1;
+ codeLines.forEach((e,i)=>e.classList.toggle('active',step.line.includes(i)));
+ $('result').classList.toggle('show',!!step.finish);$('result').textContent=step.finish?`✅ 已移除倒数第 ${n} 个结点（值为 ${nums[nums.length-n]}）；新链表：${nums.filter((_,i)=>i!==nums.length-n).join(' → ')||'空链表'}`:'';
+}
+function stop(){if(timer!==null){clearInterval(timer);timer=null;}$('play').textContent='▶ 自动播放'}
+function advance(){if(index<steps.length-1){index++;draw()}else stop()}
+function reset(){stop();index=0;draw()}
+function build(){stop();const raw=$('values').value.trim();const tok=raw.split(/[，,\s]+/).filter(Boolean);const nn=Number($('nth').value);if(tok.length===0||tok.length>18||tok.some(v=>!/^[-+]?\d+$/.test(v))||!Number.isInteger(nn)||nn<1||nn>tok.length){$('error').textContent='请输入 1～18 个整数，并确保 1 ≤ N ≤ 链表长度。';return;}const parsed=tok.map(Number);if(parsed.some(x=>!Number.isSafeInteger(x))){$('error').textContent='节点值必须是安全整数。';return;}$('error').textContent='';nums=parsed;n=nn;steps=makeSteps();index=0;draw()}
+$('build').addEventListener('click',build);$('prev').addEventListener('click',()=>{stop();index=Math.max(0,index-1);draw()});$('next').addEventListener('click',()=>{stop();advance()});$('reset').addEventListener('click',reset);$('play').addEventListener('click',()=>{if(timer!==null){stop();return}if(index===steps.length-1)index=0;draw();$('play').textContent='⏸ 暂停';timer=setInterval(advance,Number($('speed').value))});$('speed').addEventListener('change',()=>{if(timer!==null){stop();$('play').click()}});$('values').addEventListener('keydown',e=>{if(e.key==='Enter')build()});$('nth').addEventListener('keydown',e=>{if(e.key==='Enter')build()});build();
+</script>
+</body>
+</html>
