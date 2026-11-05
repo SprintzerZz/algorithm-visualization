@@ -493,13 +493,13 @@
 
     <section aria-labelledby="problems-heading">
       <div class="section-heading">
-        <h2 id="problems-heading">题目列表</h2>
-        <span class="count">目前收录 10 题</span>
+        <h2 id="problems-heading">题目与专题</h2>
+        <span class="count">目前收录 10 题 · 1 个专题</span>
       </div>
       <div class="search">
-        <label for="problem-search">搜索题目</label>
-        <input id="problem-search" type="search" autocomplete="off" aria-controls="problem-list" placeholder="输入题号或关键词，例如 P5508、链表">
-        <p class="search-hint">支持按题号、题目名称、简介或算法标签搜索。</p>
+        <label for="problem-search">搜索题目或专题</label>
+        <input id="problem-search" type="search" autocomplete="off" aria-controls="problem-list" placeholder="输入题号或关键词，例如 P5508、股票 DP">
+        <p class="search-hint">支持按题号、名称、简介或算法标签搜索。</p>
         <p class="search-status" id="search-status" role="status" aria-live="polite"></p>
       </div>
       <div class="grid" id="problem-list">
@@ -633,11 +633,24 @@
             <span class="tag">交互演示</span>
           </div>
         </a>
+        <a class="card" href="./dynamic-programming/stock-trading/">
+          <div class="card-top">
+            <span class="number">DP 专题</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </div>
+          <h3>股票买卖 DP：从 121 到 188</h3>
+          <p>逐天比较最多一次、无限次、最多两次与最多 k 次交易的状态转移。</p>
+          <div class="tags" aria-label="算法标签">
+            <span class="tag">股票 DP</span>
+            <span class="tag">动态规划</span>
+            <span class="tag">LeetCode 121/122/123/188</span>
+          </div>
+        </a>
       </div>
-      <p class="empty-state" id="empty-state" hidden>没有找到匹配的题目，请试试其他题号或关键词。</p>
+      <p class="empty-state" id="empty-state" hidden>没有找到匹配的题目或专题，请试试其他题号或关键词。</p>
     </section>
 
-    <footer>每道题的卡片可打开对应的算法交互演示。</footer>
+    <footer>每张卡片可打开对应的算法交互演示或专题学习页。</footer>
   </main>
   <script>
     const searchInput = document.getElementById("problem-search");
@@ -660,7 +673,7 @@
 
       emptyState.hidden = visibleCount > 0;
       searchStatus.textContent = query
-        ? `找到 ${visibleCount} 道题目`
+        ? `找到 ${visibleCount} 项`
         : "";
     });
   </script>
