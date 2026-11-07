@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>两数 / 三数 / 四数之和｜双指针交互教学</title>
+<style>
+:root{--bg:#0b1020;--panel:#141d31;--panel2:#1d2a43;--line:#32415c;--ink:#f2f6ff;--muted:#a8b8d2;--blue:#65a5ff;--green:#47d2a0;--orange:#ffc46b;--pink:#ec8eaf}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#18294c 0%,var(--bg) 50%);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft Yahei",sans-serif;color:var(--ink);line-height:1.6}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}.wrap{max-width:1130px;margin:auto;padding:30px 18px 70px}.hero{margin:0 0 24px}h1{font-size:clamp(26px,3.5vw,42px);margin:0 0 6px;letter-spacing:.01em}h2{font-size:20px;margin:0 0 14px}h3{font-size:15px;margin:0 0 8px}.sub,.hint{color:var(--muted)}.sub{margin:0}.panel{background:rgba(20,29,49,.96);border:1px solid var(--line);border-radius:17px;padding:22px;margin-bottom:17px;box-shadow:0 6px 30px #00000013}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}.tab,.btn{border:1px solid var(--line);color:var(--ink);background:var(--panel2);border-radius:10px;padding:10px 16px}.tab.active{background:#2157a0;border-color:#70aeff}.btn.primary{background:#2867c7;border-color:#3b84e9}.btn.accent{background:#17634f;border-color:#38b68f}.controls{display:grid;grid-template-columns:minmax(210px,2fr) minmax(95px,1fr);gap:12px}.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}.field input{width:100%;outline:none;background:#0e172a;border:1px solid var(--line);border-radius:9px;color:white;padding:11px}.field input:focus{border-color:var(--blue)}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.error{color:#ff99aa;margin:10px 0 0;min-height:22px}.statusrow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.badge{font-size:12px;padding:4px 10px;border-radius:999px;background:#27395a;color:#c9dcff}.array{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:18px 0 8px}.cell{position:relative;min-width:68px;text-align:center}.val{min-height:66px;padding:13px 12px;background:#24314a;border:2px solid #34425b;border-radius:12px;font-size:23px;font-weight:750}.cell.fixed .val{background:#183c73;border-color:var(--blue)}.cell.left .val{background:#194b41;border-color:var(--green)}.cell.right .val{background:#574222;border-color:var(--orange)}.cell.both .val{border-color:var(--pink);background:#4c2e48}.index{font-size:12px;color:var(--muted);margin-bottom:5px}.markers{min-height:25px;font-size:12px;font-weight:700;margin-top:5px;display:flex;justify-content:center;gap:5px}.marks{border-radius:5px;padding:1px 5px;background:#374761}.marks.i,.marks.j{color:var(--blue)}.marks.l{color:var(--green)}.marks.r{color:var(--orange)}.legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:8px 0;color:var(--muted);font-size:13px}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}.formula{text-align:center;font-size:19px;font-weight:650;margin:10px 0}.explain{background:#101b30;padding:15px 17px;border:1px solid #2c405f;border-radius:10px;min-height:74px}.stepbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:15px 0}.stepbar input[type=range]{flex:1;min-width:160px;accent-color:var(--blue)}.stepnum{font-size:13px;color:var(--muted);min-width:90px;text-align:right}.split{display:grid;grid-template-columns:1fr 1fr;gap:17px}.results{display:flex;flex-wrap:wrap;gap:8px;min-height:55px}.result{border:1px solid #295c4d;background:#173d35;border-radius:8px;padding:7px 10px;font-family:ui-monospace,monospace}.empty{color:var(--muted)}.code{white-space:pre-wrap;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;background:#0d1729;border:1px solid #2b3850;border-radius:10px;padding:14px;overflow:auto;margin:0}.rowline{display:block;padding:1px 6px;border-radius:4px}.rowline.hi{background:#244677;box-shadow:inset 3px 0 var(--blue);color:#fff}.guide{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.guide>div{background:#101b2c;border:1px solid #2a3a54;border-radius:11px;padding:13px}.guide b{color:#a6caff}.foot{color:var(--muted);font-size:13px}.kbd{border:1px solid #46546b;border-radius:4px;padding:1px 5px;font-size:12px}@media(max-width:760px){.split,.guide{grid-template-columns:1fr}.panel{padding:15px}.cell{min-width:50px;flex:1 1 50px;max-width:75px}.val{font-size:19px;padding:11px 4px}.controls{grid-template-columns:1fr}.stepnum{text-align:left}.formula{font-size:16px}}
+</style>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3eee4;
+  --panel: #fbf8f1;
+  --panel2: #ebe3d5;
+  --line: #ded5c7;
+  --ink: #292923;
+  --muted: #777267;
+  --blue: #65745c;
+  --green: #65745c;
+  --orange: #a74e37;
+  --pink: #c76c4e;
+  --terracotta: #c76c4e;
+  --terracotta-dark: #a74e37;
+  --olive: #65745c;
+  --olive-soft: #e8ecdf;
+  --shadow: 0 18px 42px #382a1712;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 86% 0%, #fffaf0 0, transparent 34rem),
+    linear-gradient(135deg, #f7f3eb, var(--bg) 60%, #eee8dc);
+  color: var(--ink);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.wrap { width: min(100% - 36px, 1040px); padding-top: 44px; }
+.hero { margin-bottom: 26px; }
+h1, h2, h3 { color: var(--ink); }
+h1 {
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-weight: 600;
+  letter-spacing: -.035em;
+}
+.sub, .hint, .foot, .legend, .index, .stepnum, .field label { color: var(--muted); }
+
+.panel {
+  border-color: var(--line);
+  border-radius: 15px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.tab, .btn {
+  border-color: var(--line);
+  border-radius: 9px;
+  background: var(--panel2);
+  color: var(--ink);
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.tab:hover, .btn:not(:disabled):hover { border-color: #b7ad9e; background: #f2ece1; }
+.tab.active { border-color: var(--olive); background: var(--olive-soft); color: #43513d; }
+.btn.primary { border-color: var(--terracotta-dark); background: var(--terracotta); color: #fffaf2; }
+.btn.primary:hover { background: var(--terracotta-dark); }
+.btn.accent { border-color: var(--olive); background: var(--olive); color: #fffaf2; }
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 3px;
+}
+
+.field input {
+  border-color: var(--line);
+  background: #fffdf8;
+  color: var(--ink);
+}
+.field input:focus { border-color: var(--olive); }
+.error { color: #a33e32; }
+.badge {
+  border: 1px solid #d5dccb;
+  background: var(--olive-soft);
+  color: #4a5842;
+}
+
+.val {
+  border-color: #ded5c7;
+  background: #f1ece2;
+  color: var(--ink);
+}
+.cell.fixed .val { border-color: var(--olive); background: var(--olive-soft); }
+.cell.left .val { border-color: #879178; background: #f2f0e8; }
+.cell.right .val { border-color: #c98b70; background: #f7ece4; }
+.cell.both .val { border-color: var(--terracotta); background: #f2e7df; }
+.marks { background: #eee8dc; }
+.marks.i, .marks.j, .marks.l { color: #4a5842; }
+.marks.r { color: var(--terracotta-dark); }
+.explain {
+  border-color: var(--line);
+  border-radius: 10px;
+  background: #f5f0e7;
+}
+.stepbar input[type="range"] { accent-color: var(--olive); }
+.result { border-color: #aab69d; background: var(--olive-soft); color: #394536; }
+.empty { color: var(--muted); }
+
+.code {
+  border-color: #393a34;
+  border-radius: 10px;
+  background: #292923;
+  color: #f3eee4;
+}
+.rowline.hi {
+  background: #46513f;
+  box-shadow: inset 3px 0 var(--terracotta);
+  color: #fffaf2;
+}
+.guide > div {
+  border-color: var(--line);
+  border-radius: 10px;
+  background: #f5f0e7;
+}
+.guide b { color: #4a5842; }
+.kbd { border-color: #b9b09f; }
+
+@media (max-width: 760px) {
+  .wrap { padding-top: 28px; }
+  .panel { padding: 16px; }
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .split > .panel { min-width: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body><main class="wrap"><header class="hero"><h1>双指针 · K 数之和交互课堂</h1><p class="sub">两数之和 / 三数之和 / 四数之和 · 排序、固定元素、指针移动、去重，全过程可视化</p></header>
+<section class="panel"><div class="tabs" role="tablist" aria-label="选择题型"><button class="tab" data-k="2">两数之和</button><button class="tab" data-k="3">三数之和</button><button class="tab" data-k="4">四数之和</button></div><div class="controls"><div class="field"><label for="numbers">输入数组（逗号或空格分隔，可重复、可为负数）</label><input id="numbers" value="-1, 0, 1, 2, -1, -4"></div><div class="field"><label for="target">目标值 target</label><input id="target" type="number" step="1" value="0"></div></div><div class="actions"><button id="run" class="btn primary">↻ 生成演示</button><button id="example" class="btn">载入经典样例</button><button id="random" class="btn">随机数组</button></div><p id="error" class="error" role="alert"></p><p class="hint" style="font-size:13px;margin:0">本教学返回的是<strong>不重复的数值组合</strong>（不是原数组下标）。数据先升序排序；为便于演示，最多输入 18 个整数。</p></section>
+<section class="panel"><div class="statusrow"><h2 style="margin:0">逐步执行</h2><span id="actionTag" class="badge">准备开始</span></div><div id="array" class="array"></div><div class="legend"><span><i class="dot" style="background:var(--blue)"></i>固定 i / j</span><span><i class="dot" style="background:var(--green)"></i>left</span><span><i class="dot" style="background:var(--orange)"></i>right</span></div><div id="formula" class="formula"></div><div id="explain" class="explain" aria-live="polite"></div><div class="stepbar"><button id="first" class="btn" title="第一步">⏮</button><button id="prev" class="btn">← 上一步</button><button id="next" class="btn primary">下一步 →</button><button id="last" class="btn" title="最后一步">⏭</button><button id="play" class="btn accent">▶ 自动播放</button><input id="seek" type="range" min="0" value="0" aria-label="跳转执行步骤"><span id="stepNum" class="stepnum"></span></div></section>
+<div class="split"><section class="panel"><h2>已找到的不重复组合</h2><div id="results" class="results"></div><p id="summary" class="foot"></p></section><section class="panel"><h2>当前算法分支</h2><pre id="code" class="code"></pre></section></div>
+<section class="panel"><h2>记住三个关键规律</h2><div class="guide"><div><b>① 固定 K - 2 个数</b><p>两数之和无需固定；三数固定 i；四数固定 i、j。剩下两个数交给双指针。</p></div><div><b>② 根据 sum 调整</b><p>sum 太小，left++；sum 太大，right--；sum 等于 target，记录答案并同时移动。</p></div><div><b>③ 排序后去重</b><p>固定指针跳过与前一个相同的值；找到答案并移动 left/right 后，跳过连续重复值。</p></div></div><p class="foot">时间复杂度：两数 O(n log n)（含排序） · 三数 O(n²) · 四数 O(n³)。支持键盘 <span class="kbd">←</span> / <span class="kbd">→</span> 切换步骤（输入框聚焦时除外）。</p></section></main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const defaults={2:{nums:'1, 1, 2, 3, 4, 4, 5, 6',target:'7'},3:{nums:'-1, 0, 1, 2, -1, -4',target:'0'},4:{nums:'1, 0, -1, 0, -2, 2',target:'0'}};
+let k=3,frames=[],pos=0,timer=null,sorted=[];
+const spec={2:['初始化左右指针','计算两数之和','找到组合','移动指针并去重','移动 left','移动 right','完成'],3:['固定 i','跳过重复 i','计算三数之和','找到组合','移动指针并去重','移动 left','移动 right','完成'],4:['固定 i','跳过重复 i','固定 j','跳过重复 j','计算四数之和','找到组合','移动指针并去重','移动 left','移动 right','完成']};
+function frame(tag,text,ii,jj,l,r,found=[],formula='',code=''){frames.push({tag,text,i:ii,j:jj,l,r,found:found.map(a=>a.slice()),formula,code});}
+function solve(nums,target){frames=[];const found=[];const n=nums.length;const add=(vals)=>found.push(vals.slice());
+ const expr=idx=>idx.map(x=>String(nums[x])).join(' + ')+' = '+idx.reduce((s,x)=>s+nums[x],0);
+ if(k===2){let l=0,r=n-1;frame('初始化左右指针','数组已排序。left 指向最左端，right 指向最右端。',null,null,l,r,found,'','init');while(l<r){const s=nums[l]+nums[r];frame('计算两数之和',`检查 nums[${l}] + nums[${r}] = ${s}，目标值 ${target}。`,null,null,l,r,found,expr([l,r]),'sum');if(s===target){add([nums[l],nums[r]]);frame('找到组合',`找到 [${nums[l]}, ${nums[r]}]！记录数值组合，然后移动左右指针。`,null,null,l,r,found,expr([l,r]),'match');const ol=l,or=r;l++;r--;while(l<r&&nums[l]===nums[l-1])l++;while(l<r&&nums[r]===nums[r+1])r--;frame('移动指针并去重',`left 从 ${ol} 移到 ${l}，right 从 ${or} 移到 ${r}。跳过连续重复的数值。`,null,null,l,r,found,'','dedup');}else if(s<target){l++;frame('移动 left',`和 ${s} 小于 ${target}，要增大和：left 向右移动。`,null,null,l,r,found,'','small');}else{r--;frame('移动 right',`和 ${s} 大于 ${target}，要减小和：right 向左移动。`,null,null,l,r,found,'','big');}}}
+ else if(k===3){for(let i=0;i<n-2;i++){if(i>0&&nums[i]===nums[i-1]){frame('跳过重复 i',`nums[${i}] = ${nums[i]} 与前一个相同，跳过该 i，避免重复组合。`,i,null,null,null,found,'','fixed');continue;}let l=i+1,r=n-1;frame('固定 i',`固定 i=${i}（值 ${nums[i]}），剩余区间 [${l}, ${r}] 使用双指针。`,i,null,l,r,found,'','fixed');while(l<r){const s=nums[i]+nums[l]+nums[r];frame('计算三数之和',`计算当前三数之和 ${s}，与 target=${target} 比较。`,i,null,l,r,found,expr([i,l,r]),'sum');if(s===target){add([nums[i],nums[l],nums[r]]);frame('找到组合',`找到 [${nums[i]}, ${nums[l]}, ${nums[r]}]，加入结果。`,i,null,l,r,found,expr([i,l,r]),'match');let ol=l,or=r;l++;r--;while(l<r&&nums[l]===nums[l-1])l++;while(l<r&&nums[r]===nums[r+1])r--;frame('移动指针并去重',`left ${ol} → ${l}，right ${or} → ${r}；过滤连续重复数值。`,i,null,l,r,found,'','dedup');}else if(s<target){l++;frame('移动 left',`sum=${s} < ${target}，left++ 让和增大。`,i,null,l,r,found,'','small');}else{r--;frame('移动 right',`sum=${s} > ${target}，right-- 让和减小。`,i,null,l,r,found,'','big');}}}}
+ else {for(let i=0;i<n-3;i++){if(i>0&&nums[i]===nums[i-1]){frame('跳过重复 i',`固定值 ${nums[i]} 与上一个 i 重复，跳过。`,i,null,null,null,found,'','fixed');continue;}frame('固定 i',`第一层固定 i=${i}，值 ${nums[i]}。`,i,null,null,null,found,'','fixed');for(let j=i+1;j<n-2;j++){if(j>i+1&&nums[j]===nums[j-1]){frame('跳过重复 j',`同一个 i 下，nums[${j}]=${nums[j]} 和前一个 j 重复，跳过。`,i,j,null,null,found,'','fixed');continue;}let l=j+1,r=n-1;frame('固定 j',`第二层固定 j=${j}，值 ${nums[j]}；剩下交给 left/right。`,i,j,l,r,found,'','fixed');while(l<r){const s=nums[i]+nums[j]+nums[l]+nums[r];frame('计算四数之和',`当前四数之和 ${s}，目标值 ${target}。`,i,j,l,r,found,expr([i,j,l,r]),'sum');if(s===target){add([nums[i],nums[j],nums[l],nums[r]]);frame('找到组合',`找到 [${nums[i]}, ${nums[j]}, ${nums[l]}, ${nums[r]}]。`,i,j,l,r,found,expr([i,j,l,r]),'match');const ol=l,or=r;l++;r--;while(l<r&&nums[l]===nums[l-1])l++;while(l<r&&nums[r]===nums[r+1])r--;frame('移动指针并去重',`left ${ol} → ${l}，right ${or} → ${r}，跳过重复值。`,i,j,l,r,found,'','dedup');}else if(s<target){l++;frame('移动 left',`sum=${s} < ${target}，left++。`,i,j,l,r,found,'','small');}else{r--;frame('移动 right',`sum=${s} > ${target}，right--。`,i,j,l,r,found,'','big');}}}}}
+ frame('完成',`搜索结束。共找到 ${found.length} 组不同的数值组合。`,null,null,null,null,found,'','done');}
+const codeLines={2:[['初始化左右指针','int left = 0, right = n - 1;','init'],['比较求和','while (left < right) {','sum'],['比较求和','    long sum = nums[left] + nums[right];','sum'],['找到','    if (sum == target) { 记录答案;','match'],['移动与去重','        left++; right--; 跳过重复值;','dedup'],['过小','    } else if (sum < target) left++;','small'],['过大','    else right--;','big'],['结束','}','done']],3:[['固定','for (int i = 0; i < n - 2; i++) {','fixed'],['固定','    if (i > 0 && nums[i] == nums[i-1]) continue;','fixed'],['固定','    int left = i + 1, right = n - 1;','fixed'],['计算','    long sum = nums[i] + nums[left] + nums[right];','sum'],['找到','    if (sum == target) 记录答案;','match'],['移动与去重','    找到后 left++; right--; 再去重;','dedup'],['小于','    else if (sum < target) left++;','small'],['大于','    else right--;','big']],4:[['固定 i','for (int i = 0; i < n - 3; i++) {','fixed'],['去重 i','    if (i > 0 && nums[i] == nums[i-1]) continue;','fixed'],['固定 j','    for (int j = i+1; j < n-2; j++) {','fixed'],['去重 j','        if (j > i+1 && nums[j] == nums[j-1]) continue;','fixed'],['初始化','        int left=j+1, right=n-1;','fixed'],['计算','        long sum = nums[i]+nums[j]+nums[left]+nums[right];','sum'],['找到','        if (sum == target) 记录答案;','match'],['移动与去重','        找到后移动左右指针并去重;','dedup'],['小于','        else if (sum < target) left++;','small'],['大于','        else right--;','big']]};
+function render(){const f=frames[pos];if(!f)return;const container=$('array');container.replaceChildren();sorted.forEach((v,index)=>{const cell=document.createElement('div');cell.className='cell';const marks=[];if(index===f.i)marks.push(['i','i']);if(index===f.j)marks.push(['j','j']);if(index===f.l)marks.push(['left','l']);if(index===f.r)marks.push(['right','r']);if(marks.length>1)cell.classList.add('both');else if(index===f.i||index===f.j)cell.classList.add('fixed');else if(index===f.l)cell.classList.add('left');else if(index===f.r)cell.classList.add('right');const indexEl=document.createElement('div');indexEl.className='index';indexEl.textContent=index;const val=document.createElement('div');val.className='val';val.textContent=v;const marker=document.createElement('div');marker.className='markers';marks.forEach(([name,style])=>{const m=document.createElement('span');m.className='marks '+style;m.textContent=name;marker.append(m)});cell.append(indexEl,val,marker);container.append(cell)});$('actionTag').textContent=f.tag;$('explain').textContent=f.text;$('formula').textContent=f.formula||'　';$('seek').max=frames.length-1;$('seek').value=pos;$('stepNum').textContent=`${pos+1} / ${frames.length}`;$('first').disabled=$('prev').disabled=pos===0;$('last').disabled=$('next').disabled=pos===frames.length-1;const results=$('results');results.replaceChildren();if(!f.found.length){const e=document.createElement('span');e.className='empty';e.textContent='当前尚未找到符合条件的组合';results.append(e)}f.found.forEach(vals=>{const item=document.createElement('span');item.className='result';item.textContent='['+vals.join(', ')+']';results.append(item)});$('summary').textContent=`已找到 ${f.found.length} 组 · 完整结果见最后一步`;const code=$('code');code.replaceChildren();codeLines[k].forEach(([,line,key])=>{const span=document.createElement('span');span.className='rowline'+(key===f.code?' hi':'');span.textContent=line;code.append(span)});}
+function stop(){if(timer!==null){clearInterval(timer);timer=null;}$('play').textContent='▶ 自动播放';}
+function go(n){pos=Math.max(0,Math.min(frames.length-1,n));render();if(pos===frames.length-1)stop();}
+function run(){stop();const raw=$('numbers').value.trim();const tokens=raw.split(/[\s,，]+/).filter(Boolean);if(tokens.length<k||tokens.length>18){$('error').textContent=`请输入 ${k}~18 个整数。`;return;}if(!tokens.every(s=>/^-?\d+$/.test(s)&&Number.isSafeInteger(Number(s)))){$('error').textContent='数组只能包含安全范围内的整数。';return;}const target=Number($('target').value);if(!Number.isSafeInteger(target)){$('error').textContent='target 必须是安全范围内的整数。';return;}sorted=tokens.map(Number).sort((a,b)=>a-b);const max=Math.max(...sorted.map(Math.abs));if(max*4>Number.MAX_SAFE_INTEGER){$('error').textContent='数值过大，可能造成 JavaScript 整数精度损失，请缩小数值。';return;}$('error').textContent='';solve(sorted,target);go(0);}
+function setK(next){k=Number(next);document.querySelectorAll('.tab').forEach(b=>{const active=Number(b.dataset.k)===k;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active))});$('numbers').value=defaults[k].nums;$('target').value=defaults[k].target;run();}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setK(b.dataset.k)));$('run').addEventListener('click',run);$('example').addEventListener('click',()=>setK(k));$('random').addEventListener('click',()=>{$('numbers').value=Array.from({length:Math.max(7,k+3)},()=>Math.floor(Math.random()*13)-6).join(', ');run();});$('first').addEventListener('click',()=>{stop();go(0)});$('prev').addEventListener('click',()=>{stop();go(pos-1)});$('next').addEventListener('click',()=>{stop();go(pos+1)});$('last').addEventListener('click',()=>{stop();go(frames.length-1)});$('seek').addEventListener('input',e=>{stop();go(Number(e.target.value))});$('play').addEventListener('click',()=>{if(timer!==null){stop();return;}if(pos>=frames.length-1)go(0);$('play').textContent='⏸ 暂停';timer=setInterval(()=>go(pos+1),850)});document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(e.key==='ArrowRight'){e.preventDefault();stop();go(pos+1)}if(e.key==='ArrowLeft'){e.preventDefault();stop();go(pos-1)}});setK(3);
+})();
+</script></body></html>
