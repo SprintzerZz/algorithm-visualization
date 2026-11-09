@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="DFS 岛屿问题专题：交互追踪岛屿数量、最大面积、递归调用栈与四方向搜索。"/>
+<title>DFS 专题：岛屿数量与最大面积 · 交互演示</title>
+<style>
+:root{--bg:#0b1220;--panel:#131f32;--panel2:#1b2a40;--line:#30435b;--ink:#eaf1fa;--muted:#a9bed3;--blue:#2876c7;--land:#43b983;--visit:#f5b84c;--focus:#ffdf79;--water:#254868;--accent:#76c6ff;--shadow:0 12px 32px #0004}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0%,#173556 0%,var(--bg) 46%);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}.wrap{max-width:1250px;padding:28px 20px 65px;margin:auto}h1{font-size:clamp(25px,3vw,36px);margin:0 0 7px}.sub{color:var(--muted);margin:0 0 22px}.layout{display:grid;grid-template-columns:1.12fr .88fr;gap:18px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:19px;box-shadow:var(--shadow)}h2{font-size:18px;margin:0 0 13px}h3{font-size:15px;margin:16px 0 8px;color:#cfeaff}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:15px}button,select,input,textarea{font:inherit}button,select{border:1px solid #47617c;border-radius:9px;padding:9px 12px;color:var(--ink);background:#223753;cursor:pointer}button:hover{background:#315173}button.primary{background:#187bcb;border-color:#2b96e6;font-weight:700}button.primary:hover{background:#2493eb}button:disabled{opacity:.4;cursor:not-allowed}select{min-width:145px}.grid{display:grid;gap:6px;width:min(100%,540px);margin:12px auto 18px}.cell{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;position:relative;border:2px solid #ffffff10;cursor:pointer;user-select:none;transition:background .16s,transform .12s,border-color .12s;color:#fff}.cell:hover{transform:scale(1.045)}.cell.water{background:var(--water)}.cell.land{background:var(--land);color:#072d23}.cell.visited{background:#bd793b;color:#fff}.cell.current{border:3px solid #fff4a8;box-shadow:0 0 0 3px #f5b84c66;z-index:1}.cell.scan{outline:2px dashed #b8e5ff;outline-offset:-4px}.cell .coord{position:absolute;right:4px;bottom:2px;font-size:9px;opacity:.7}.legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;color:var(--muted);font-size:13px}.dot{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:middle}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.metric{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}.metric span{display:block;font-size:12px;color:var(--muted)}.metric strong{font-size:26px;color:var(--accent);font-variant-numeric:tabular-nums}.message{padding:12px 14px;border-radius:12px;background:#203754;border-left:3px solid #69b8f0;min-height:68px;line-height:1.6}.message strong{color:#ffdc8d}.code{background:#091522;border:1px solid #29425b;border-radius:12px;padding:10px 0;overflow:auto;font:12.6px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;max-height:420px}.code-line{display:flex;padding:0 12px;white-space:pre;min-width:max-content}.code-line.active{background:#294b6a;border-left:3px solid #fbc96c;padding-left:9px}.ln{width:23px;flex:none;color:#6787a4;user-select:none}.stack{background:#0b1829;border:1px solid var(--line);border-radius:12px;min-height:85px;max-height:210px;overflow:auto;padding:10px;display:flex;flex-direction:column-reverse;gap:6px}.frame{font:12px ui-monospace,monospace;padding:6px 9px;background:#1c3954;border-radius:7px;border-left:3px solid #59b0ea}.frame.top{background:#645025;border-color:#ffda73}.notes{font-size:13px;color:var(--muted);margin-top:8px}.slider{accent-color:#53b7f7;width:110px}.inputArea{width:100%;border:1px solid #405d7c;color:#ebf4ff;background:#0b1a2b;padding:10px;border-radius:10px;font:14px/1.5 ui-monospace,monospace;resize:vertical}.editor{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}.small{font-size:12px;color:var(--muted)}.progress{height:7px;border-radius:10px;background:#30465f;overflow:hidden;margin:13px 0}.progress>div{height:100%;background:linear-gradient(90deg,#348ed6,#75dcbe);transition:width .1s}.segment{display:flex;gap:7px;flex-wrap:wrap}.segment button.selected{background:#176aa8;border-color:#5abdf9}.pill{display:inline-block;padding:2px 8px;border-radius:15px;background:#274b67;color:#bcdeff;font-size:12px}#error{color:#ffaaa8;font-size:13px;margin-top:7px;min-height:1em}.footer{font-size:13px;color:#95afc7;margin-top:15px}.hint{background:#1a3544;padding:10px 12px;border-radius:9px;border:1px solid #2b6572;margin-top:12px;color:#bddfdc}label{color:var(--muted)}@media(max-width:850px){.layout{grid-template-columns:1fr}.wrap{padding:16px 11px 45px}.panel{padding:14px}.cell .coord{display:none}.code{font-size:11.5px}.metrics{gap:5px}.metric{padding:8px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3eee4;
+  --panel: #fbf8f1;
+  --panel2: #ebe3d5;
+  --line: #ded5c7;
+  --ink: #292923;
+  --muted: #777267;
+  --blue: #65745c;
+  --land: #65745c;
+  --visit: #a74e37;
+  --focus: #c76c4e;
+  --water: #ebe3d5;
+  --accent: #c76c4e;
+  --shadow: 0 18px 42px #382a1712;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 86% 0%, #fffaf0 0, transparent 34rem),
+    linear-gradient(135deg, #f7f3eb, var(--bg) 60%, #eee8dc);
+  color: var(--ink);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.wrap { max-width: 1040px; padding-top: 42px; }
+.layout, .panel, .grid { min-width: 0; }
+h1, h2, h3 { color: var(--ink); }
+h1 { font-family: Georgia, "Noto Serif SC", "Songti SC", serif; font-weight: 600; letter-spacing: -.035em; }
+h3 { color: #4a5842; }
+.sub, .notes, .small, .legend, label, .footer { color: var(--muted); }
+.panel { border-color: var(--line); border-radius: 15px; background: var(--panel); box-shadow: var(--shadow); }
+button, select {
+  border-color: var(--line);
+  border-radius: 9px;
+  background: var(--panel2);
+  color: var(--ink);
+}
+button:hover { background: #f2ece1; }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+.cell:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+button.primary { border-color: #a74e37; background: #c76c4e; color: #fffaf2; }
+button.primary:hover { background: #a74e37; }
+.cell { color: var(--ink); border-color: #ded5c7; }
+.cell.water { background: #ebe3d5; }
+.cell.land { background: #65745c; color: #fffaf2; }
+.cell.visited { background: #a74e37; color: #fffaf2; }
+.cell.current { border-color: #c76c4e; box-shadow: 0 0 0 3px #c76c4e40; }
+.cell.scan { outline-color: #65745c; }
+.legend .dot { border: 1px solid #29292330; }
+.legend span:nth-child(1) .dot { background: #ebe3d5 !important; }
+.legend span:nth-child(2) .dot { background: #65745c !important; }
+.legend span:nth-child(3) .dot { background: #a74e37 !important; }
+.legend span:nth-child(4) .dot { background: #fbf8f1 !important; border: 2px solid #c76c4e !important; }
+.metric { border-color: var(--line); border-radius: 11px; background: #f5f0e7; }
+.metric span { color: var(--muted); }
+.metric strong { color: #4a5842; }
+.message { border-left-color: #c76c4e; background: #f5f0e7; color: var(--ink); }
+.message strong { color: #a74e37; }
+.code { border-color: #393a34; border-radius: 10px; background: #292923; color: #f3eee4; }
+.code-line.active { border-left-color: #c76c4e; background: #46513f; }
+.ln { color: #c5bcae; }
+.stack { border-color: var(--line); background: #f5f0e7; }
+.frame { background: #e8ecdf; border-left-color: #65745c; color: #292923; }
+.frame.top { background: #f2e7df; border-color: #c76c4e; }
+.inputArea { border-color: var(--line); background: #fffdf8; color: var(--ink); }
+.progress { background: #ded5c7; }
+.progress > div { background: linear-gradient(90deg, #c76c4e, #65745c); }
+.pill { background: #e8ecdf; color: #4a5842; }
+.hint { border-color: #d5dccb; background: #e8ecdf; color: #4a5842; }
+#error { color: #a33e32; }
+
+@media (max-width: 850px) {
+  .wrap { padding-top: 24px; }
+  .layout { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body><main class="wrap">
+<h1>DFS 专题：岛屿数量与最大面积</h1>
+<p class="sub">用四方向连通网格学习深度优先搜索（DFS）：统计岛屿数量或最大面积，逐步观察递归、回溯与访问标记。地图中 <code>0</code> 表示水域，<code>1</code> 表示未访问陆地，<code>2</code> 表示已访问。</p>
+<div class="layout"><section class="panel">
+<h2>① 地图与执行控制</h2>
+<div class="toolbar"><label for="mode">当前算法</label><select id="mode"><option value="count">岛屿数量 numIslands</option><option value="area">最大面积 maxAreaOfIsland</option></select><select id="example"><option value="default">示例：多个岛屿</option><option value="ring">示例：环形陆地</option><option value="single">示例：单个大岛屿</option><option value="none">示例：全是水</option></select></div>
+<div id="grid" class="grid" role="grid" aria-label="可编辑岛屿地图"></div>
+<div class="legend"><span><i class="dot" style="background:var(--water)"></i>0 水域</span><span><i class="dot" style="background:var(--land)"></i>1 未访问陆地</span><span><i class="dot" style="background:#bd793b"></i>2 已访问</span><span><i class="dot" style="background:#645025;border:2px solid #fff4a8"></i>当前递归位置</span></div>
+<div class="metrics"><div class="metric"><span>岛屿数量 nums</span><strong id="count">0</strong></div><div class="metric"><span>当前岛屿面积 area</span><strong id="area">0</strong></div><div class="metric"><span>最大岛屿面积 max</span><strong id="max">0</strong></div></div>
+<div class="toolbar"><button class="primary" id="next">下一步 →</button><button id="prev">← 上一步</button><button id="play">▶ 自动播放</button><button id="reset">↺ 重置执行</button></div>
+<div class="toolbar"><label for="speed">播放速度</label><input id="speed" class="slider" type="range" min="1" max="10" value="6"/><span id="speedLabel" class="small">6 / 10</span><span class="pill" id="stepInfo">第 0 步</span></div>
+<div class="progress"><div id="bar" style="width:0%"></div></div>
+<div class="message" id="msg" aria-live="polite"></div>
+<div class="editor"><h3>自定义输入（01 字符串）</h3><textarea id="input" class="inputArea" rows="5" spellcheck="false">11000
+11000
+00100
+00011</textarea><div class="toolbar" style="margin-top:9px"><button id="apply">应用地图</button><button id="random">🎲 随机生成</button><span class="small">2～9 行，每行 2～9 列且长度相同</span></div><div id="error"></div></div>
+<div class="hint">💡 <b>操作提示：</b>地图格子可以直接点击切换水域/陆地；修改地图会重新开始。DFS 的每一次进入、判断、污染和返回都有独立步骤，可前进或后退。</div>
+</section><section class="panel"><h2>② Java 代码同步高亮</h2><div id="code" class="code"></div><h3>③ DFS 递归调用栈 <span class="small">（底部为最早调用）</span></h3><div id="stack" class="stack"></div><p class="notes" id="stacknote">DFS 尚未开始。</p><h3>④ 算法核心区别</h3><div id="difference" class="message"></div><h3>⑤ 执行细节</h3><p class="small" id="detail">每次从外层 for 循环发现一个未访问的 1，就启动一次 DFS。注意这是四方向连通，斜对角不算连通。</p></section></div>
+<p class="footer">复杂度：两个算法都为 <b>O(m × n)</b> 时间，最坏 <b>O(m × n)</b> 递归栈空间。大地图在 Java 中可能递归栈溢出，可改用显式栈或 BFS。</p>
+</main>
+<script>
+(() => {'use strict';
+const $=id=>document.getElementById(id);
+const examples={default:['11000','11000','00100','00011'],ring:['11111','10001','10101','10001','11111'],single:['11110','11110','01111','00111'],none:['00000','00000','00000','00000']};
+let origin=[],events=[],index=0,timer=null,mode='count';
+const snippets={count:[
+'public static int numIslands(int[][] grid) {',
+'    int nums = 0;',
+'    for (int i = 0; i < grid.length; i++) {',
+'        for (int j = 0; j < grid[0].length; j++) {',
+'            if (grid[i][j] == 1) {',
+'                nums++;',
+'                dfs(grid, i, j);',
+'            }',
+'        }',
+'    }',
+'    return nums;',
+'}',
+'void dfs(int[][] grid, int i, int j) {',
+'    if (!inArea(grid, i, j)) return;',
+'    if (grid[i][j] != 1) return;',
+'    grid[i][j] = 2;',
+'    dfs(grid, i + 1, j); // 下',
+'    dfs(grid, i - 1, j); // 上',
+'    dfs(grid, i, j + 1); // 右',
+'    dfs(grid, i, j - 1); // 左',
+'}'],
+area:[
+'public int maxAreaOfIsland(int[][] grid) {',
+'    int max = 0;',
+'    for (int i = 0; i < grid.length; i++) {',
+'        for (int j = 0; j < grid[0].length; j++) {',
+'            if (grid[i][j] == 1) {',
+'                int area = dfs(grid, i, j);',
+'                max = Math.max(max, area);',
+'            }',
+'        }',
+'    }',
+'    return max;',
+'}',
+'int dfs(int[][] grid, int i, int j) {',
+'    if (!inArea(grid, i, j)) return 0;',
+'    if (grid[i][j] != 1) return 0;',
+'    grid[i][j] = 2;',
+'    return 1 + dfs(grid, i - 1, j) // 上',
+'             + dfs(grid, i + 1, j) // 下',
+'             + dfs(grid, i, j - 1) // 左',
+'             + dfs(grid, i, j + 1); // 右',
+'}']};
+function generate(){
+  events=[];const g=origin.map(a=>a.slice()),m=g.length,n=g[0].length;
+  let nums=0,max=0,area=0,scan=null,cur=null,stack=[];
+  function save(message,line){events.push({g:g.map(a=>a.slice()),nums,max,area,scan:scan&&scan.slice(),cur:cur&&cur.slice(),stack:stack.map(x=>({...x})),message,line});}
+  save('准备开始：按「下一步」遍历网格。',1);
+  function dfs(i,j){
+    const frame={i,j};stack.push(frame);cur=[i,j];
+    save(`进入 dfs(${i}, ${j})：先检查边界。`,13);
+    if(i<0||i>=m||j<0||j>=n){save(`(${i}, ${j}) 超出地图范围，${mode==='count'?'直接 return':'返回 0'}。`,14);stack.pop();cur=stack.length?[stack.at(-1).i,stack.at(-1).j]:null;save('递归返回到上一层。',14);return 0;}
+    save(`检查 grid[${i}][${j}] = ${g[i][j]}，是否为尚未访问的陆地 1？`,15);
+    if(g[i][j]!==1){save(`grid[${i}][${j}] = ${g[i][j]}：${g[i][j]===0?'是水域':'已经污染过'}，${mode==='count'?'直接 return':'返回 0'}。`,15);stack.pop();cur=stack.length?[stack.at(-1).i,stack.at(-1).j]:null;save('递归返回到上一层。',15);return 0;}
+    g[i][j]=2;area++;save(`访问陆地 (${i}, ${j})：把 1 改成 2，当前岛屿已访问 ${area} 个格子。`,16);
+    let res=1;const dirs=mode==='count'?[[1,0,'下',17],[-1,0,'上',18],[0,1,'右',19],[0,-1,'左',20]]:[[-1,0,'上',17],[1,0,'下',18],[0,-1,'左',19],[0,1,'右',20]];
+    for(const [di,dj,name,line] of dirs){save(`从 (${i}, ${j}) 向${name}递归，探索 (${i+di}, ${j+dj})。`,line);res+=dfs(i+di,j+dj);cur=[i,j];if(mode==='area')save(`返回 dfs(${i}, ${j})：累加子方向面积，当前子树面积为 ${res}。`,line);}
+    stack.pop();cur=stack.length?[stack.at(-1).i,stack.at(-1).j]:null;save(`dfs(${i}, ${j}) 四个方向处理完毕，${mode==='area'?`返回面积 ${res}`:'返回上一层'}。`,mode==='area'?17:20);return res;
+  }
+  for(let i=0;i<m;i++)for(let j=0;j<n;j++){
+    scan=[i,j];cur=null;save(`外层循环扫描 (${i}, ${j})：值是 ${g[i][j]}。`,5);
+    if(g[i][j]===1){nums++;area=0;save(`发现新岛屿起点 (${i}, ${j})。${mode==='count'?`nums++，目前有 ${nums} 座岛屿。`:'调用 dfs 统计这一整块陆地的面积。'}`,mode==='count'?6:6);
+      let thisArea=dfs(i,j);if(mode==='area'){max=Math.max(max,thisArea);save(`本岛屿面积为 ${thisArea}，更新最大面积 max = ${max}。`,7);}else save(`第 ${nums} 座岛屿已全部污染，继续扫描未访问格子。`,7);
+    }
+  }
+  scan=null;cur=null;area=0;save(`✅ 执行完成！${mode==='count'?`岛屿总数为 ${nums}`:`最大岛屿面积为 ${max}`}。`,11);
+}
+function stop(){if(timer){clearInterval(timer);timer=null;}$('play').textContent='▶ 自动播放';}
+function redraw(){const e=events[index];if(!e)return;const m=e.g.length,n=e.g[0].length;const grid=$('grid');grid.style.gridTemplateColumns=`repeat(${n},1fr)`;grid.innerHTML='';e.g.forEach((row,i)=>row.forEach((v,j)=>{let node=document.createElement('div');node.className='cell '+(v===0?'water':v===1?'land':'visited')+(e.cur&&e.cur[0]===i&&e.cur[1]===j?' current':'')+(e.scan&&e.scan[0]===i&&e.scan[1]===j?' scan':'');node.setAttribute('role','gridcell');node.setAttribute('aria-label',`第${i+1}行第${j+1}列：${v}`);node.tabIndex=0;node.title=`(${i},${j}) = ${v}；点击切换原始地图`;node.innerHTML=`${v}<span class="coord">${i},${j}</span>`;node.onclick=()=>{origin[i][j]=1-origin[i][j];$('input').value=origin.map(a=>a.join('')).join('\n');restart();};node.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();node.click();}};grid.appendChild(node);}));
+$('count').textContent=e.nums;$('area').textContent=e.area;$('max').textContent=e.max;$('msg').textContent=e.message;$('stepInfo').textContent=`第 ${index} / ${events.length-1} 步`;$('bar').style.width=(index/(events.length-1||1)*100)+'%';
+$('prev').disabled=index===0;$('next').disabled=index===events.length-1;
+const stack=$('stack');stack.innerHTML='';e.stack.forEach((s,k)=>{const d=document.createElement('div');d.className='frame '+(k===e.stack.length-1?'top':'');d.textContent=`${k===e.stack.length-1?'▶ ':''}dfs(${s.i}, ${s.j})`;stack.appendChild(d);});if(!e.stack.length)stack.textContent='（调用栈为空）';$('stacknote').textContent=e.stack.length?`递归深度：${e.stack.length}；黄色框表示当前正在执行的 DFS。`:'当前没有 DFS 调用，正在外层循环或算法已结束。';
+document.querySelectorAll('.code-line').forEach((node,k)=>node.classList.toggle('active',k+1===e.line));const active=$('code').querySelector('.active');if(active&&index>0)active.scrollIntoView({block:'nearest'});
+}
+function renderCode(){const div=$('code');div.innerHTML='';snippets[mode].forEach((line,k)=>{let d=document.createElement('div');d.className='code-line';let l=document.createElement('span');l.className='ln';l.textContent=k+1;let c=document.createElement('span');c.textContent=line;d.append(l,c);div.appendChild(d);});$('difference').innerHTML=mode==='count'?'🔢 <b>岛屿数量：</b>外层循环每找到一个未污染的 <code>1</code>，就执行 <code>nums++</code>，然后 DFS 把整座岛屿标记为 2。<b>dfs 不需要返回面积。</b>':'📐 <b>最大面积：</b>外层循环找到一个未污染的 <code>1</code> 时，执行 <code>area = dfs(...)</code>。DFS 返回 <code>1 + 上 + 下 + 左 + 右</code>，然后用 <code>max = Math.max(max, area)</code> 更新答案。';}
+function restart(){stop();generate();index=0;renderCode();redraw();}
+function step(n){index=Math.max(0,Math.min(events.length-1,index+n));redraw();if(index===events.length-1)stop();}
+function play(){if(timer){stop();return;}if(index===events.length-1)index=0;const delay=()=>Math.max(55,950-Number($('speed').value)*90);$('play').textContent='Ⅱ 暂停';function tick(){if(index>=events.length-1){stop();return;}step(1);timer=setTimeout(tick,delay());}timer=setTimeout(tick,delay());}
+function setMap(lines){origin=lines.map(s=>[...s].map(Number));$('input').value=lines.join('\n');restart();}
+$('mode').onchange=e=>{mode=e.target.value;restart();};$('example').onchange=e=>setMap(examples[e.target.value]);$('next').onclick=()=>{stop();step(1);};$('prev').onclick=()=>{stop();step(-1);};$('reset').onclick=restart;$('play').onclick=play;$('speed').oninput=e=>$('speedLabel').textContent=e.target.value+' / 10';
+$('apply').onclick=()=>{const lines=$('input').value.trim().split(/\s+/).filter(Boolean);let err='';if(lines.length<2||lines.length>9)err='请输入 2～9 行。';else if(lines[0].length<2||lines[0].length>9)err='每行请输入 2～9 个字符。';else if(lines.some(s=>s.length!==lines[0].length||!/^[01]+$/.test(s)))err='只能输入 0 和 1，且每行长度相同。';$('error').textContent=err;if(!err){$('example').value='default';setMap(lines);}};
+$('random').onclick=()=>{let lines=Array.from({length:5},()=>Array.from({length:6},()=>Math.random()<.48?'1':'0').join(''));setMap(lines);};
+document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;if(e.key==='ArrowRight'){stop();step(1);}if(e.key==='ArrowLeft'){stop();step(-1);}if(e.key===' '){e.preventDefault();play();}});
+setMap(examples.default);
+})();
+</script></body></html>
