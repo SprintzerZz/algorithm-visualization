@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>P4021 全排列计算 · DFS 回溯交互演示</title>
+<style>
+:root{--bg:#0b1220;--panel:#141f31;--panel2:#19283d;--text:#edf4ff;--muted:#9baec5;--stroke:#34465c;--accent:#60a5fa;--green:#34d399;--pink:#fb7185;--amber:#fbbf24}*{box-sizing:border-box}body{margin:0;background:linear-gradient(130deg,#0b1220,#101b2e);color:var(--text);font:15px/1.55 system-ui,-apple-system,'Segoe UI','Microsoft YaHei',sans-serif}header{padding:26px max(18px,calc((100vw - 1500px)/2));border-bottom:1px solid var(--stroke)}h1{margin:0;font-size:clamp(22px,3vw,32px)}header p{margin:5px 0 0;color:var(--muted)}.wrap{max-width:1500px;margin:auto;padding:18px;display:grid;grid-template-columns:minmax(0,1.8fr) minmax(310px,1fr);gap:16px}.panel{background:var(--panel);border:1px solid var(--stroke);border-radius:16px;padding:18px;min-width:0}.panel h2{font-size:17px;margin:0 0 12px}.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}.controls button,.controls select{border:1px solid #47607a;background:#213653;color:#fff;padding:9px 14px;border-radius:9px;font:inherit;cursor:pointer}.controls button:hover:not(:disabled){background:#2c4c70}.controls button:disabled{opacity:.35;cursor:not-allowed}.controls .primary{background:#2563eb;border-color:#3b82f6}.controls .primary:hover:not(:disabled){background:#1d4ed8}.controls label{color:var(--muted);font-size:13px}.controls input[type=range]{width:95px;accent-color:var(--accent)}.status{background:#20314a;border:1px solid #355578;padding:10px 13px;border-radius:10px;margin-bottom:10px;min-height:65px}.status strong{color:#93c5fd}.legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-bottom:8px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;background:var(--accent)}.dot.green{background:var(--green)}.dot.pink{background:var(--pink)}.dot.gray{background:#64748b}svg{display:block;width:100%;height:auto;background:radial-gradient(circle at top,#1a2940,#101c2b);border-radius:12px;border:1px solid #273d56}svg .edge{stroke:#5d7088;stroke-width:2.6;fill:none}svg .edge.active{stroke:#34d399;stroke-width:4}svg .edge.back{stroke:#fb7185;stroke-width:4;stroke-dasharray:9 6}svg .node rect{fill:#253c5b;stroke:#567394;stroke-width:1.7;rx:9}svg .node.active rect{fill:#2563eb;stroke:#93c5fd;stroke-width:3}svg .node.done rect{fill:#174b46;stroke:#34d399}svg .node.unseen{opacity:.38}svg text{fill:#edf4ff;font-size:15px;text-anchor:middle;dominant-baseline:central;font-weight:650}svg .elabel{font-size:12px;fill:#bbcee5;font-weight:500}.arrow{font-size:20px;fill:#fb7185}.right{display:grid;gap:16px;align-content:start}.kv{display:grid;grid-template-columns:88px 1fr;gap:9px;align-items:start;padding:6px 0;border-bottom:1px solid #2b3e55}.kv:last-child{border:0}.kv .k{color:var(--muted)}.pill{display:inline-block;border-radius:6px;background:#263d5d;padding:3px 8px;margin:0 4px 5px 0}.stack-item{padding:6px 9px;margin:5px 0;border-radius:7px;background:#243652;border-left:3px solid #60a5fa;font-family:ui-monospace,monospace;font-size:13px}.stack-item:last-child{border-left-color:var(--green);background:#21443f}.output{min-height:75px;max-height:165px;overflow:auto}.output span{display:inline-block;border:1px solid #315d57;background:#1d4541;color:#baf9db;padding:4px 7px;border-radius:7px;margin:3px;font-size:13px}pre{overflow:auto;background:#0c1726;border-radius:10px;padding:13px;margin:0;font-size:13px;line-height:1.75}pre .line{display:block;white-space:pre}.line.hi{background:#294f73;border-left:3px solid #7dd3fc;margin-left:-10px;padding-left:7px}.explain{color:var(--muted);font-size:13px;margin-top:12px}.count{font-variant-numeric:tabular-nums;color:#93c5fd}.wide{grid-column:1/-1}.timeline{width:100%;accent-color:#60a5fa;margin:6px 0}.foot{color:#a6bed5;font-size:13px}.desc{padding:13px;background:#20314a;border-radius:10px;color:#d2e6fa}.action-select{color:#86efac}.action-undo{color:#fda4af}.action-output{color:#fde68a}@media(max-width:940px){.wrap{grid-template-columns:1fr}.right{grid-template-columns:1fr 1fr}.codepanel{grid-column:1/-1}}@media(max-width:600px){.right{grid-template-columns:1fr}.panel{padding:12px}.controls button{padding:8px 10px}header{padding:18px}}
+</style>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3eee4;
+  --panel: #fbf8f1;
+  --panel2: #ebe3d5;
+  --text: #292923;
+  --muted: #777267;
+  --stroke: #ded5c7;
+  --accent: #c76c4e;
+  --green: #65745c;
+  --pink: #a74e37;
+  --amber: #a74e37;
+}
+
+body {
+  background: radial-gradient(ellipse at 86% 0%, #fffaf0 0, transparent 34rem),
+    linear-gradient(135deg, #f7f3eb, var(--bg) 60%, #eee8dc);
+  color: var(--text);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+header {
+  padding-right: max(20px, calc((100vw - 1200px) / 2));
+  padding-left: max(20px, calc((100vw - 1200px) / 2));
+  border-color: var(--stroke);
+}
+header h1, .panel h2 { color: var(--text); font-family: Georgia, "Noto Serif SC", "Songti SC", serif; }
+header h1 { font-size: clamp(30px, 4vw, 40px); font-weight: 600; letter-spacing: -.035em; }
+header p, .legend, .controls label, .foot { color: var(--muted); }
+.wrap { max-width: 1240px; padding-top: 34px; }
+.panel {
+  border-color: var(--stroke);
+  background: var(--panel);
+  box-shadow: 0 18px 42px #382a1712;
+}
+.controls button, .controls select {
+  border-color: var(--stroke);
+  background: var(--panel2);
+  color: var(--text);
+}
+.controls button:hover:not(:disabled) { background: #e4dbcc; }
+.controls .primary {
+  border-color: #a74e37;
+  background: #c76c4e;
+  color: #fffaf2;
+}
+.controls .primary:hover:not(:disabled) { background: #a74e37; }
+.controls button:focus-visible, .controls select:focus-visible, input:focus-visible {
+  outline: 2px solid #c76c4e;
+  outline-offset: 3px;
+}
+.status, .desc { border-color: #ded5c7; background: #f5f0e7; color: var(--text); }
+.status strong, .count { color: #a74e37; }
+.dot { border: 1px solid #29292324; background: #c76c4e; }
+.dot.green { background: #65745c; }
+.dot.pink { background: #a74e37; }
+.dot.gray { background: #ebe3d5; }
+svg { border-color: var(--stroke); background: #f5f0e7; }
+svg .edge { stroke: #9c978a; }
+svg .edge.active { stroke: #65745c; marker-end: url(#select-arrow); }
+svg .edge.back { stroke: #c76c4e; marker-start: url(#undo-arrow); }
+svg .node rect { fill: #ebe3d5; stroke: #9b988b; }
+svg .node.active rect { fill: #c76c4e; stroke: #a74e37; }
+svg .node.done rect { fill: #e8ecdf; stroke: #65745c; }
+svg .node.unseen { opacity: .58; }
+svg text { fill: var(--text); }
+svg .elabel { fill: var(--muted); }
+.pill, .stack-item { background: #e8ecdf; color: var(--text); }
+.kv { border-color: var(--stroke); }
+.stack-item { border-left-color: #65745c; }
+.stack-item:last-child { border-left-color: #c76c4e; background: #f2e7df; }
+.action-select { color: #65745c; }
+.action-undo, .action-output { color: #a74e37; }
+.output span { border-color: #c7d0bc; background: #e8ecdf; color: #43513d; }
+pre { background: #292923; color: #f3eee4; }
+pre .line.hi { border-left-color: #c76c4e; background: #46513f; }
+.timeline { accent-color: #c76c4e; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<header><h1>P4021 全排列计算：DFS + 回溯</h1><p>以 [1, 2, 3] 为例，观察“选择 → 递归 → 撤销选择”的完整过程。图中每个节点就是当前 path 状态。</p></header>
+<main class="wrap">
+<section class="panel">
+<div class="controls"><button id="reset">↺ 重置</button><button id="prev">← 上一步</button><button class="primary" id="next">下一步 →</button><button id="play">▶ 自动播放</button><label>速度 <input id="speed" type="range" min="1" max="5" value="3"></label></div>
+<div class="status"><div id="statusTitle"><strong>准备开始</strong></div><div id="statusText">点击“下一步”，先从根节点选择数字 1。</div></div>
+<div class="legend"><span><i class="dot"></i>当前递归节点</span><span><i class="dot green"></i>已访问节点</span><span><i class="dot pink"></i>撤销回溯边</span><span><i class="dot gray"></i>尚未访问</span></div>
+<svg id="tree" viewBox="0 0 1060 520" role="img" aria-label="1、2、3 全排列的回溯树">
+<defs>
+<marker id="select-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#65745c"/></marker>
+<marker id="undo-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#c76c4e"/></marker>
+</defs>
+</svg>
+<div style="display:flex;justify-content:space-between;margin-top:12px;color:var(--muted);font-size:13px"><span>事件进度：<b id="progress" class="count">0 / 0</b></span><span>绿色向下 = 选择 · 粉色向上 = 撤销</span></div><input class="timeline" id="seek" type="range" min="0" max="1" value="0" aria-label="拖动进度">
+<p class="foot">💡 观察关键点：从 [1, 2, 3] 返回 [1, 2]，撤销 3 后，才能考虑其他候选；继续撤销 2 后，才能从 [1] 选择 3。</p>
+</section>
+<div class="right">
+<section class="panel"><h2>当前递归状态</h2><div class="kv"><div class="k">path</div><div id="path">[]</div></div><div class="kv"><div class="k">used</div><div id="used">[false, false, false]</div></div><div class="kv"><div class="k">递归深度</div><div id="depth">0</div></div><div class="kv"><div class="k">递归调用栈</div><div id="stack"></div></div></section>
+<section class="panel"><h2>已生成排列（<span id="total">0</span> / 6）</h2><div class="output" id="output"></div></section>
+<section class="panel codepanel"><h2>Java 回溯代码（当前执行行高亮）</h2><pre id="code"></pre><p class="explain">完整排列总数为 3! = 6。每次递归返回时，要同时执行 <code>path.remove(...)</code> 与 <code>used[i] = false</code>，才不会影响其他分支。</p></section>
+</div>
+<section class="panel wide"><h2>回溯为什么要“恢复现场”？</h2><div class="desc">例如 path = [1, 2, 3] 已经输出了一个答案。回到上一层时先撤销 3，path 变成 [1, 2]；再撤销 2，path 变回 [1]，此时 2 可再次被其他分支选择，但当前层接下来应该尝试 3，从而进入 [1, 3]。<strong>回溯并不是删除答案，而是恢复搜索现场。</strong></div></section>
+</main>
+<script>
+const nums=[1,2,3];
+const codeLines=[
+'void backtrack(List<Integer> path, boolean[] used) {',
+'    if (path.size() == 3) {',
+'        ans.add(new ArrayList<>(path));',
+'        return;',
+'    }',
+'    for (int i = 0; i < 3; i++) {',
+'        if (used[i]) continue;',
+'        path.add(nums[i]);     // 选择',
+'        used[i] = true;',
+'        backtrack(path, used); // 递归',
+'        path.remove(path.size() - 1); // 撤销',
+'        used[i] = false;',
+'    }',
+'}'];
+const nodes=[];let idCounter=0;
+function treeNode(path,parent=null, chosen=null){const node={id:idCounter++, path:[...path],parent,chosen,children:[],seen:false};nodes.push(node);if(path.length<3){for(let n of nums){if(!path.includes(n)){node.children.push(treeNode([...path,n],node,n))}}}return node}
+const root=treeNode([]); const maxDepth=3;let layers=[[],[],[],[]];for(const node of nodes)layers[node.path.length].push(node);
+for(let d=0;d<=3;d++){const arr=layers[d],gap=960/arr.length;arr.forEach((n,i)=>{n.x=50+gap*(i+.5);n.y=63+d*143})}
+const events=[];
+function emit(type,node,extra={}){events.push({type,id:node.id,path:[...node.path],...extra})}
+function walk(node){if(node.path.length===3){emit('output',node,{line:3});return}for(const child of node.children){emit('select',child,{line:8,from:node.id,n:child.chosen});walk(child);emit('undo',node,{line:11,from:child.id,n:child.chosen})}}
+walk(root);events.push({type:'finish',id:root.id,path:[],line:14});
+const $=id=>document.getElementById(id);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let step=0,timer=null;const svgNS='http://www.w3.org/2000/svg';function svgEl(name,attributes,txt){const el=document.createElementNS(svgNS,name);for(let[k,v]of Object.entries(attributes||{}))el.setAttribute(k,v);if(txt!==undefined)el.textContent=txt;return el}
+const canvas=$('tree');for(const node of nodes){if(node.parent){const l=svgEl('line',{x1:node.parent.x,y1:node.parent.y+19,x2:node.x,y2:node.y-20,class:'edge',id:'edge-'+node.id});canvas.append(l);const midX=(node.parent.x+node.x)/2,midY=(node.parent.y+node.y)/2;const lab=svgEl('text',{x:midX,y:midY-9,class:'elabel'},'选 '+node.chosen);canvas.append(lab)}}for(const node of nodes){const group=svgEl('g',{class:'node unseen',id:'node-'+node.id});const s=node.path.join(', '),w=Math.max(74,29+s.length*9);group.append(svgEl('rect',{x:node.x-w/2,y:node.y-23,width:w,height:46}));group.append(svgEl('text',{x:node.x,y:node.y},'['+s+']'));canvas.append(group)}
+function nodeById(id){return nodes[id]};function describe(e){if(!e)return ['准备开始','从 [] 开始遍历，点击下一步选择 1。',''];if(e.type==='select')return ['选择 '+e.n,'将 '+e.n+' 加入 path，标记 used['+(e.n-1)+'] = true，然后进入下一层递归。','action-select'];if(e.type==='undo')return ['撤销 '+e.n,'从 path 末尾移除 '+e.n+'，并将 used['+(e.n-1)+'] = false，返回上一层尝试其他候选。','action-undo'];if(e.type==='output')return ['找到完整排列','path 长度等于 3，复制当前排列放入 ans。随后递归返回并撤销最后一个选择。','action-output'];return ['搜索完成','6 个排列已全部找到。所有选择均已撤销，path 回到 []。','']}
+function render(){const visited=new Set([root.id]);let current=root,answers=[],event=null;for(let i=0;i<step;i++){event=events[i];if(event.type==='select'){visited.add(event.id);current=nodeById(event.id)}else if(event.type==='undo'){current=nodeById(event.id)}else if(event.type==='output'){answers.push([...event.path])}else if(event.type==='finish'){current=root}}const path=[...current.path],used=nums.map(n=>path.includes(n));
+for(const n of nodes){$('node-'+n.id).setAttribute('class','node '+(n.id===current.id?'active':visited.has(n.id)?'done':'unseen'));if(n.parent){const l=$('edge-'+n.id);l.setAttribute('class','edge '+(event?.type==='select'&&event.id===n.id?'active':event?.type==='undo'&&event.from===n.id?'back':''))}}
+const [title,desc,css]=describe(event);$('statusTitle').innerHTML='<strong class="'+css+'">'+title+'</strong>';$('statusText').textContent=desc;$('path').innerHTML='<span class="pill">['+path.join(', ')+']</span>';$('used').textContent='['+used.map(x=>x?'true':'false').join(', ')+']';$('depth').textContent=path.length;let s=[];for(let i=0;i<=path.length;i++){s.push('<div class="stack-item">backtrack(['+path.slice(0,i).join(', ')+'])</div>')}$('stack').innerHTML=s.join('');$('output').innerHTML=answers.map((p,i)=>'<span>'+ (i+1)+'. ['+p.join(', ')+']</span>').join('')||'<span style="background:none;border:none;color:#8aa3bc">等待找到第一个完整排列…</span>';$('total').textContent=answers.length;$('progress').textContent=step+' / '+events.length;$('seek').max=events.length;$('seek').value=step;
+const selectedLine=event?.line||0;$('code').innerHTML=codeLines.map((l,i)=>'<span class="line '+(selectedLine===i+1?'hi':'')+'">'+String(i+1).padStart(2,' ')+'  '+esc(l)+'</span>').join('');$('prev').disabled=step===0;$('next').disabled=step===events.length;if(step===events.length)stop()}
+function stop(){if(timer){clearInterval(timer);timer=null}$('play').textContent='▶ 自动播放'}function advance(){if(step<events.length){step++;render()}else stop()};$('next').onclick=()=>{stop();advance()};$('prev').onclick=()=>{stop();step=Math.max(0,step-1);render()};$('reset').onclick=()=>{stop();step=0;render()};$('seek').oninput=e=>{stop();step=Number(e.target.value);render()};function interval(){return [1200,900,650,430,240][Number($('speed').value)-1]};$('play').onclick=()=>{if(timer){stop();return}if(step===events.length)step=0;$('play').textContent='⏸ 暂停';advance();timer=setInterval(advance,interval())};$('speed').oninput=()=>{if(timer){stop();$('play').click()}};document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight'){$('next').click()}if(e.key==='ArrowLeft'){$('prev').click()}});render();
+</script>
+</body></html>
